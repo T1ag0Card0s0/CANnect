@@ -1,0 +1,18 @@
+#pragma once
+
+#include <iostream>
+#include <string>
+namespace cannect
+{
+class Logger
+{
+  protected:
+    Logger() = default;
+
+  public:
+    Logger(Logger &other) = delete;
+    void operator=(const Logger &) = delete;
+    static Logger &getInstance();
+    void log(const std::string &msg) { std::cout << msg << std::endl; }
+};
+} // namespace cannect

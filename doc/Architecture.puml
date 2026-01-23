@@ -1,0 +1,84 @@
+@startuml
+left to right direction
+
+package CLI {
+  class ArgumentParser
+  class CanLogger
+  class Logger
+}
+package LoggerModule {
+  class CanCsvLogger
+  class CanJsonLogger
+}
+package Core {
+  class CanDispatcher
+  class CanFrame
+  class CanListener
+  class SocketCanTransport
+  interface ICanObserver
+  interface ICanTransport
+  interface IProtocol
+  class EncoderDecoder
+  class Session
+  class Types
+  class CanTsProtocol
+  class CanTsHeader
+}
+
+class Cannect {
+  - ArgumentParser argumentParser
+  - ICanTransport *socket
+  - ICanObserver *observer
+  +run(argc, argv)
+}
+class Main
+
+CanLogger --|> Logger
+CanCsvLogger --|> Logger
+CanJsonLogger --|> Logger
+CanDispatcher --> CanFrame : uses
+CanDispatcher --> CanListener : notifies
+CanDispatcher --> SocketCanTransport : uses
+SocketCanTransport ..|> ICanTransport
+CanListener ..|> ICanObserver
+CanDispatcher --> IProtocol : uses
+CanDispatcher --> EncoderDecoder : uses
+CanDispatcher --> Session : uses
+CanDispatcher --> Types : uses
+CanDispatcher --> CanTsProtocol : uses
+
+Main ..> Cannect : uses
+
+
+Cannect *-- ArgumentParser : "parses CLI arguments"
+Cannect o-- ICanTransport : "manages CAN interface"
+Cannect o-- ICanObserver : "handles CAN events"
+
+CanDispatcher "1" o-- "*" ICanObserver : "notifies observers"
+CanDispatcher "1" *-- "*" CanFrame : "stores CAN frames"
+CanListener "1" o-- "*" ICanObserver : "registers observers"
+CanListener "1" *-- "1" ICanTransport : "owns transport"
+
+CanLogger "1" o-- "*" CanFrame : "logs frames"
+CanCsvLogger "1" o-- "*" CanFrame : "logs as CSV"
+CanJsonLogger "1" o-- "*" CanFrame : "logs as JSON"
+
+Session "1" o-- "*" CanTsProtocol : "manages protocol sessions"
+EncoderDecoder ..> CanTsHeader : "encodes/decodes header"
+CanTsProtocol o-- SocketCanTransport : "uses transport"
+
+note top of Cannect : Main application class
+note top of ArgumentParser : Parses command-line arguments
+note right of CanLogger : Handles CAN log operations
+note right of CanCsvLogger : Outputs logs in CSV format
+note right of CanJsonLogger : Outputs logs in JSON format
+note left of CanDispatcher : Central CAN message dispatcher
+note right of SocketCanTransport : SocketCAN interface implementation
+note right of ICanTransport : Abstract CAN transport interface
+note right of ICanObserver : Observer for CAN events
+note right of IProtocol : Protocol abstraction
+note right of EncoderDecoder : CAN message encoding/decoding
+note right of Session : CAN session management
+note right of Types : CAN type definitions
+note right of CanTsProtocol : CAN Transport Service protocol
+@enduml

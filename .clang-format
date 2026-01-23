@@ -1,0 +1,30 @@
+Language: Cpp
+BasedOnStyle: LLVM
+
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+ColumnLimit: 120
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: true
+  BeforeElse: true
+
+SpaceBeforeParens: ControlStatements
+
+AlignConsecutiveDeclarations: false
+AlignConsecutiveAssignments: false
+AlignOperands: false
+AlignTrailingComments: false
+
+SortIncludes: true
+IncludeBlocks: Regroup
