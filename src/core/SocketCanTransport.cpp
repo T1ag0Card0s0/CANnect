@@ -97,7 +97,15 @@ int SocketCanTransport::writeFrame(const CanFrame &frame)
   struct can_frame kernelFrame;
   std::memset(&kernelFrame, 0, sizeof(kernelFrame));
 
-  kernelFrame.can_id = frame.getCanId();
+  uint32_t canId = frame.getCanId();
+  if (canId > CAN_SFF_MASK)
+  {
+    kernelFrame.can_id = canId | CAN_EFF_FLAG;
+  }
+  else
+  {
+    kernelFrame.can_id = canId;
+  }
   kernelFrame.can_dlc = frame.getDLC();
   std::memcpy(kernelFrame.data, frame.getData(), frame.getDLC());
 
@@ -137,7 +145,9 @@ int SocketCanTransport::readFrame(CanFrame &frame)
     return -1;
   }
 
-  frame.setCanId(kernelFrame.can_id);
+  // Mask out special flags (EFF, RTR, ERR) to get the actual CAN ID
+  uint32_t canId = kernelFrame.can_id & CAN_EFF_MASK;
+  frame.setCanId(canId);
   frame.setDLC(kernelFrame.can_dlc);
   frame.setData(kernelFrame.data, kernelFrame.can_dlc);
 

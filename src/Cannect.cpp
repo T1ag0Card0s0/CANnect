@@ -1,12 +1,13 @@
 #include "cannect/Cannect.hpp"
 
 #include "cannect/cli/CanLogger.hpp"
-#include "cannect/core/CanFrame.hpp"
 #include "cannect/core/CanListener.hpp"
+#include "cannect/core/SocketCanTransport.hpp"
+#include "cannect/core/cants/CanTsProtocol.hpp"
 
 using namespace cannect;
 
-Cannect::Cannect() : argumentParser(TARGET, VERSION), socket(nullptr)
+Cannect::Cannect() : argumentParser(TARGET, VERSION), socket(nullptr), observer(nullptr), protocol(nullptr)
 {
 }
 
@@ -51,12 +52,21 @@ int Cannect::run(int argc, char **argv)
     observer = new CanLogger();
   }
 
+  if (argumentParser.has("--protocol"))
+  {
+    protocol = new CanTsProtocol();
+  }
+
   if (socket)
   {
     CanListener listener(socket);
     if (observer)
     {
       listener.addObserver(observer);
+    }
+    if (protocol)
+    {
+      listener.addObserver(protocol);
     }
     listener.start();
     while (listener.isRunning())

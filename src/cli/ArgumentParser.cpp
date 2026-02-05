@@ -1,5 +1,7 @@
 #include "cannect/cli/ArgumentParser.hpp"
 
+#include <iostream>
+
 using namespace cannect;
 
 ArgumentParser::ArgumentParser(const std::string &name, const std::string &version) : name(name), version(version)

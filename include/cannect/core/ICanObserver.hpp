@@ -2,8 +2,6 @@
 
 #include "CanFrame.hpp"
 
-#include <vector>
-
 namespace cannect
 {
 
@@ -11,7 +9,7 @@ namespace cannect
   {
   public:
     virtual ~ICanObserver() {};
-    virtual void update(std::vector<CanFrame> canFrames) = 0;
+    virtual void update(CanFrame &canFrame) = 0;
   };
 
 } // namespace cannect

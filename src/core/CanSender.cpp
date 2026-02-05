@@ -4,5 +4,5 @@ using namespace cannect;
 
 int CanSender::sendFrame(const CanFrame &frame)
 {
-    return transport->writeFrame(frame);
+  return transport->writeFrame(frame);
 }

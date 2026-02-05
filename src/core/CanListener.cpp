@@ -1,5 +1,4 @@
 #include "cannect/core/CanListener.hpp"
-#include "cannect/core/SocketCanTransport.hpp"
 
 using namespace cannect;
 
@@ -58,6 +57,6 @@ void CanListener::runner()
     {
       canDispatcher.addFrame(frame);
       canDispatcher.notify();
-    } 
+    }
   }
 }

@@ -11,10 +11,10 @@ namespace cannect
 
     enum class CanTsMessageType : uint8_t
     {
-      TELECOMMAND = 0,
-      TELEMETRY = 1,
-      UNSOLICITED = 2,
-      TIMESYNC = 3,
+      TIMESYNC = 0,
+      UNSOLICITED = 1,
+      TELECOMMAND = 2,
+      TELEMETRY = 3,
       SETBLOCK = 4,
       GETBLOCK = 5,
     };
@@ -24,7 +24,7 @@ namespace cannect
       uint8_t to;
       uint8_t from;
       CanTsMessageType type;
-      uint8_t command;
+      uint16_t command;
     };
 
     struct __attribute__((packed)) CanTsFrame

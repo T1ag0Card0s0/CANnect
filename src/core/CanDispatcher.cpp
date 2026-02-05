@@ -4,6 +4,11 @@ using namespace cannect;
 
 void CanDispatcher::attach(ICanObserver *canObserver)
 {
+  if (canObserver == nullptr)
+  {
+    return;
+  }
+
   observers.push_back(canObserver);
 }
 
@@ -14,11 +19,15 @@ void CanDispatcher::detach(ICanObserver *canObserver)
 
 void CanDispatcher::notify()
 {
-  std::list<ICanObserver *>::iterator iterator = observers.begin();
-  while (iterator != observers.end())
+  for (auto &frame : canFrames)
   {
-    (*iterator)->update(canFrames);
-    ++iterator;
+    for (auto *observer : observers)
+    {
+      if (observer != nullptr)
+      {
+        observer->update(frame);
+      }
+    }
   }
   canFrames.clear();
 }

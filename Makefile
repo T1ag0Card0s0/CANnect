@@ -3,14 +3,23 @@ LIB_TARGET := libcannect.a
 EXE_TARGET := cannect
 BUILD_DIR := build
 SRC_DIR := src
-SRCS := Cannect.cpp core/SocketCanTransport.cpp core/CanFrame.cpp core/CanDispatcher.cpp core/CanListener.cpp core/CanSender.cpp cli/ArgumentParser.cpp cli/Logger.cpp cli/CanLogger.cpp 
+SRCS := Cannect.cpp \
+		core/SocketCanTransport.cpp \
+		core/CanFrame.cpp core/CanDispatcher.cpp \
+		core/CanListener.cpp \
+		core/CanSender.cpp \
+		core/cants/CanTsProtocol.cpp \
+		cli/ArgumentParser.cpp \
+		cli/Logger.cpp \
+		cli/CanLogger.cpp 
+
 OBJS := $(SRCS:%.cpp=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
 PREFIX ?= $(HOME)/.local/bin
 
 CXX := g++
-CXXFLAGS := -Iinclude -DTARGET=\"$(EXE_TARGET)\" -DVERSION=\"$(VERSION)\" -Wall -Wextra -Wpedantic -O2 -MMD -MP -std=c++17
+CXXFLAGS := -Iinclude -DTARGET=\"$(EXE_TARGET)\" -DVERSION=\"$(VERSION)\" -Wall -Wextra -Wpedantic -O2 -MMD -MP -std=c++17 -g
 LDFLAGS :=
 AR := ar
 ARFLAGS := rcs

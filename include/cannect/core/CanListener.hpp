@@ -2,7 +2,7 @@
 
 #include "cannect/core/CanDispatcher.hpp"
 #include "cannect/core/ICanObserver.hpp"
-#include "cannect/core/SocketCanTransport.hpp"
+#include "cannect/core/ICanTransport.hpp"
 
 #include <atomic>
 #include <thread>

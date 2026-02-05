@@ -10,7 +10,7 @@ namespace cannect
   public:
     CanLogger() = default;
     ~CanLogger() = default;
-    void update(std::vector<CanFrame> canFrames) override;
+    void update(CanFrame &canFrames) override;
   };
 
 } // namespace cannect
