@@ -18,11 +18,11 @@ namespace cannect
     };
     struct Argument
     {
-        std::string name;
-        std::string help;
-        ArgType type;
+        std::string                                          name;
+        std::string                                          help;
+        ArgType                                              type;
         std::optional<std::variant<std::string, int, float>> value;
-        bool present = false;
+        bool                                                 present = false;
     };
 
     class ArgumentParser
@@ -48,8 +48,8 @@ namespace cannect
         bool parseValue(Argument &arg, const std::string &valueStr);
 
         std::unordered_map<std::string, Argument> arguments;
-        std::string name;
-        std::string version;
+        std::string                               name;
+        std::string                               version;
     };
 
 } // namespace cannect

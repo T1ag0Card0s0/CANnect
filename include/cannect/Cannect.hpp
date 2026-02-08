@@ -1,12 +1,12 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+
 #include "cannect/cli/ArgumentParser.hpp"
+#include "cannect/core/CanListener.hpp"
 #include "cannect/core/ICanObserver.hpp"
 #include "cannect/core/ICanTransport.hpp"
-#include "cannect/core/IProtocol.hpp"
-
-#include <memory.h>
-#include <memory>
 
 namespace cannect
 {
@@ -21,9 +21,10 @@ namespace cannect
 
       private:
         ArgumentParser argumentParser;
-        std::shared_ptr<ICanTransport> socket;
-        std::shared_ptr<ICanObserver> observer;
-        std::shared_ptr<IProtocol> protocol;
+
+        std::unique_ptr<ICanTransport>             socket;
+        std::unique_ptr<CanListener>               listener;
+        std::vector<std::unique_ptr<ICanObserver>> observers;
     };
 
 } // namespace cannect

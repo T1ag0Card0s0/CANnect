@@ -3,22 +3,24 @@
 #include "CanFrame.hpp"
 #include "ICanTransport.hpp"
 
-#include <memory>
-
 namespace cannect
 {
     class CanSender
     {
       public:
-        explicit CanSender(std::shared_ptr<ICanTransport> transport) : transport(transport)
+        explicit CanSender(ICanTransport &transport)
+            : transport(transport)
         {
         }
 
         ~CanSender() = default;
 
+        CanSender(const CanSender &)            = delete;
+        CanSender &operator=(const CanSender &) = delete;
+
         int sendFrame(const CanFrame &frame);
 
       private:
-        std::shared_ptr<ICanTransport> transport;
+        ICanTransport &transport;
     };
 } // namespace cannect

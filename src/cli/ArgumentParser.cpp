@@ -4,7 +4,9 @@
 
 using namespace cannect;
 
-ArgumentParser::ArgumentParser(const std::string &name, const std::string &version) : name(name), version(version)
+ArgumentParser::ArgumentParser(const std::string &name, const std::string &version)
+    : name(name)
+    , version(version)
 {
 }
 
@@ -104,20 +106,20 @@ void ArgumentParser::help() const
         std::cout << "  " << name << "\t";
         switch (arg.type)
         {
-        case ArgType::NONE:
-            std::cout << "       ";
-            break;
-        case ArgType::STRING:
-            std::cout << "<str> ";
-            break;
-        case ArgType::INT:
-            std::cout << "<int> ";
-            break;
-        case ArgType::FLOAT:
-            std::cout << "<float>";
-            break;
-        default:
-            break;
+            case ArgType::NONE:
+                std::cout << "       ";
+                break;
+            case ArgType::STRING:
+                std::cout << "<str> ";
+                break;
+            case ArgType::INT:
+                std::cout << "<int> ";
+                break;
+            case ArgType::FLOAT:
+                std::cout << "<float>";
+                break;
+            default:
+                break;
         }
         std::cout << "\t" << arg.help << std::endl;
     }
@@ -130,43 +132,43 @@ bool ArgumentParser::parseValue(Argument &arg, const std::string &valueStr)
     {
         switch (arg.type)
         {
-        case ArgType::STRING:
-            arg.value = valueStr;
-            return true;
+            case ArgType::STRING:
+                arg.value = valueStr;
+                return true;
 
-        case ArgType::INT: {
-            size_t pos;
-            int val = std::stoi(valueStr, &pos);
-            if (pos != valueStr.length())
-                return false;
-            arg.value = val;
-            return true;
-        }
-
-        case ArgType::FLOAT: {
-            size_t pos;
-            float val = std::stof(valueStr, &pos);
-            if (pos != valueStr.length())
-                return false;
-            arg.value = val;
-            return true;
-        }
-
-        case ArgType::NONE:
-            return true;
-
-        case ArgType::BOOL:
-            if (valueStr == "true" || valueStr == "1")
-            {
-                arg.value = std::string("true");
+            case ArgType::INT: {
+                size_t pos;
+                int    val = std::stoi(valueStr, &pos);
+                if (pos != valueStr.length())
+                    return false;
+                arg.value = val;
                 return true;
             }
-            else if (valueStr == "false" || valueStr == "0")
-            {
-                arg.value = std::string("false");
+
+            case ArgType::FLOAT: {
+                size_t pos;
+                float  val = std::stof(valueStr, &pos);
+                if (pos != valueStr.length())
+                    return false;
+                arg.value = val;
                 return true;
             }
-            return true;
+
+            case ArgType::NONE:
+                return true;
+
+            case ArgType::BOOL:
+                if (valueStr == "true" || valueStr == "1")
+                {
+                    arg.value = std::string("true");
+                    return true;
+                }
+                else if (valueStr == "false" || valueStr == "0")
+                {
+                    arg.value = std::string("false");
+                    return true;
+                }
+                return true;
         }
     }
     catch (...)

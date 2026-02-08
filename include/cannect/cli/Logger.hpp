@@ -9,13 +9,11 @@ namespace cannect
       protected:
         Logger() = default;
 
-        static Logger *instance;
-
       public:
-        Logger(Logger &other) = delete;
-        void operator=(const Logger &) = delete;
-        static Logger *getInstance();
-        void log(std::string msg)
+        Logger(Logger &other)                    = delete;
+        void           operator=(const Logger &) = delete;
+        static Logger &getInstance();
+        void           log(std::string msg)
         {
             std::cout << msg << std::endl;
         }

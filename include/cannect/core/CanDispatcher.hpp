@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ICanObserver.hpp"
+#include <shared_mutex>
+#include <vector>
 
-#include <list>
-#include <memory>
+#include "ICanObserver.hpp"
 
 namespace cannect
 {
@@ -11,14 +11,15 @@ namespace cannect
     class CanDispatcher
     {
       public:
-        CanDispatcher() = default;
+        CanDispatcher()  = default;
         ~CanDispatcher() = default;
-        void attach(std::shared_ptr<ICanObserver> canObserver);
-        void detach(std::shared_ptr<ICanObserver> canObserver);
+        void attach(ICanObserver *observer);
+        void detach(ICanObserver *observer);
         void notify(CanFrame &canFrame);
 
       private:
-        std::list<std::shared_ptr<ICanObserver>> observers;
+        std::vector<ICanObserver *> observers;
+        mutable std::shared_mutex   mutex;
     };
 
 } // namespace cannect

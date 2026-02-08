@@ -1,11 +1,12 @@
 Language:        Cpp
-
 BasedOnStyle:    LLVM
 
 IndentWidth:     4
 TabWidth:        4
 UseTab:          Never
 ContinuationIndentWidth: 4
+
+ColumnLimit: 120
 
 BreakBeforeBraces: Custom
 BraceWrapping:
@@ -24,19 +25,40 @@ BraceWrapping:
   SplitEmptyNamespace:   true
 
 SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceAfterCStyleCast: true
+
 AllowShortIfStatementsOnASingleLine: Never
-AllowShortLoopsOnASingleLine:        false
-AllowShortFunctionsOnASingleLine:    None
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortLambdasOnASingleLine: Empty
 
-ColumnLimit: 120
-
-PointerAlignment: Right 
+PointerAlignment: Right
 DerivePointerAlignment: false
+AlignAfterOpenBracket: Align
+AlignOperands: Align
+AlignTrailingComments: true
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerIndentWidth: 4
+AlwaysBreakTemplateDeclarations: Yes
 
 SortIncludes: true
-IncludeBlocks: Preserve
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^<.*>'
+    Priority: 1
+  - Regex: '^"cannect/'
+    Priority: 2
+  - Regex: '.*'
+    Priority: 3
 
 NamespaceIndentation: All
 FixNamespaceComments: true
-ReflowComments: true
 
+IndentCaseLabels: true
+IndentGotoLabels: false
+
+ReflowComments: true

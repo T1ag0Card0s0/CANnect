@@ -1,9 +1,14 @@
 #include "cannect/core/CanListener.hpp"
-#include <memory>
+
+#include <chrono>
+#include <iostream>
+#include <thread>
 
 using namespace cannect;
 
-CanListener::CanListener(std::shared_ptr<ICanTransport> canTransport) : canTransport(canTransport), running(false)
+CanListener::CanListener(ICanTransport &canTransport)
+    : canTransport(canTransport)
+    , running(false)
 {
 }
 
@@ -19,10 +24,13 @@ void CanListener::start()
     {
         return;
     }
-    if (!canTransport->isOpen())
+
+    if (!canTransport.isOpen())
     {
-        canTransport->open();
+        running.store(false);
+        throw std::runtime_error("Transport must be opened before starting listener");
     }
+
     listenerThread = std::thread(&CanListener::runner, this);
 }
 
@@ -44,19 +52,51 @@ bool CanListener::isRunning()
     return running.load();
 }
 
-void CanListener::addObserver(std::shared_ptr<ICanObserver> canObserver)
+void CanListener::registerObserver(ICanObserver *observer)
 {
-    canDispatcher.attach(canObserver);
+    if (observer != nullptr)
+    {
+        canDispatcher.attach(observer);
+    }
+}
+
+void CanListener::unregisterObserver(ICanObserver *observer)
+{
+    canDispatcher.detach(observer);
 }
 
 void CanListener::runner()
 {
-    while (running.load())
+    int       consecutive_errors     = 0;
+    const int MAX_CONSECUTIVE_ERRORS = 10;
+
+    while (running.load(std::memory_order_acquire))
     {
         CanFrame frame{};
-        if (canTransport->readFrame(frame) > 0)
+        int      result = canTransport.readFrame(frame);
+
+        if (result > 0)
         {
+            consecutive_errors = 0;
             canDispatcher.notify(frame);
+        }
+        else if (result == 0)
+        {
+            consecutive_errors = 0;
+        }
+        else
+        {
+            consecutive_errors++;
+            std::cerr << "CAN read error (consecutive: " << consecutive_errors << ")" << std::endl;
+
+            if (consecutive_errors >= MAX_CONSECUTIVE_ERRORS)
+            {
+                std::cerr << "Too many consecutive errors, stopping listener" << std::endl;
+                running.store(false);
+                break;
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
     }
 }

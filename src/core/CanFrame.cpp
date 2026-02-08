@@ -4,12 +4,17 @@
 
 using namespace cannect;
 
-CanFrame::CanFrame() : m_canId(0), m_dlc(0), m_data{}
+CanFrame::CanFrame()
+    : m_canId(0)
+    , m_dlc(0)
+    , m_data{}
 {
 }
 
 CanFrame::CanFrame(uint32_t canId, const uint8_t *data, uint8_t length)
-    : m_canId(canId), m_dlc(length > Can_MAX_DATA_LENGTH ? Can_MAX_DATA_LENGTH : length), m_data{}
+    : m_canId(canId)
+    , m_dlc(length > Can_MAX_DATA_LENGTH ? Can_MAX_DATA_LENGTH : length)
+    , m_data{}
 {
     if (data != nullptr && m_dlc > 0)
     {

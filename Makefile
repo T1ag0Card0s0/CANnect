@@ -20,7 +20,8 @@ DEPS := $(OBJS:.o=.d)
 PREFIX ?= $(HOME)/.local/bin
 
 CXX := g++
-CXXFLAGS := -Iinclude -DTARGET=\"$(EXE_TARGET)\" -DVERSION=\"$(VERSION)\" -Wall -Wextra -Wpedantic -MMD -MP -O2 -std=c++17
+CXXFLAGS := -Iinclude -DTARGET=\"$(EXE_TARGET)\" -DVERSION=\"$(VERSION)\" -std=c++17 -O2 -MMD -MP -Wall -Wextra -Wpedantic -Werror
+
 LDFLAGS :=
 AR := ar
 ARFLAGS := rcs

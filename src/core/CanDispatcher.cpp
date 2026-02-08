@@ -1,30 +1,54 @@
 #include "cannect/core/CanDispatcher.hpp"
-#include <memory>
+
+#include <algorithm>
+#include <iostream>
+#include <mutex>
+#include <shared_mutex>
 
 using namespace cannect;
 
-void CanDispatcher::attach(std::shared_ptr<ICanObserver> canObserver)
+void CanDispatcher::attach(ICanObserver *observer)
 {
-    if (canObserver == nullptr)
+    if (observer == nullptr)
     {
         return;
     }
 
-    observers.push_back(canObserver);
+    std::unique_lock<std::shared_mutex> lock(mutex);
+
+    auto it = std::find(observers.begin(), observers.end(), observer);
+    if (it == observers.end())
+    {
+        observers.push_back(observer);
+    }
 }
 
-void CanDispatcher::detach(std::shared_ptr<ICanObserver> canObserver)
+void CanDispatcher::detach(ICanObserver *observer)
 {
-    observers.remove(canObserver);
+    std::unique_lock<std::shared_mutex> lock(mutex);
+
+    auto it = std::remove(observers.begin(), observers.end(), observer);
+    observers.erase(it, observers.end());
 }
 
-void CanDispatcher::notify(CanFrame &canFrame)
+void CanDispatcher::notify(CanFrame &frame)
 {
-    for (auto observer : observers)
+    std::shared_lock<std::shared_mutex> lock(mutex);
+    std::vector<ICanObserver *>         observer_copy = observers;
+    lock.unlock();
+
+    for (auto *observer : observer_copy)
     {
         if (observer != nullptr)
         {
-            observer->update(canFrame);
+            try
+            {
+                observer->update(frame);
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Observer update failed: " << e.what() << std::endl;
+            }
         }
     }
 }

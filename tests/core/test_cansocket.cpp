@@ -21,8 +21,8 @@ CANNECT_TEST_CASE(ArgumentParser_Construct)
 
 CANNECT_TEST_CASE(Logger_GetInstance)
 {
-    Logger *logger = Logger::getInstance();
-    logger->log("Logger coverage test");
+    Logger &logger = Logger::getInstance();
+    logger.log("Logger coverage test");
 }
 
 CANNECT_TEST_CASE(SocketCanTransport_IsOpen_Default)
@@ -47,8 +47,8 @@ CANNECT_TEST_CASE(BooleanTests)
 
 CANNECT_TEST_CASE(PointerTests)
 {
-    int *null_ptr = nullptr;
-    int value = 42;
+    int *null_ptr  = nullptr;
+    int  value     = 42;
     int *valid_ptr = &value;
 
     cannect_assert_null(null_ptr, "Null pointer is null");

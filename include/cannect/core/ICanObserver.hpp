@@ -8,7 +8,7 @@ namespace cannect
     class ICanObserver
     {
       public:
-        virtual ~ICanObserver() {};
+        virtual ~ICanObserver() {}
         virtual void update(const CanFrame &canFrame) = 0;
     };
 
