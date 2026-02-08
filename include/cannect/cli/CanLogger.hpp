@@ -5,12 +5,12 @@
 namespace cannect
 {
 
-  class CanLogger : public ICanObserver
-  {
-  public:
-    CanLogger() = default;
-    ~CanLogger() = default;
-    void update(CanFrame &canFrames) override;
-  };
+    class CanLogger : public ICanObserver
+    {
+      public:
+        CanLogger() = default;
+        ~CanLogger() = default;
+        void update(const CanFrame &canFrames) override;
+    };
 
 } // namespace cannect

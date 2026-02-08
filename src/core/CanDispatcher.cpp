@@ -1,38 +1,30 @@
 #include "cannect/core/CanDispatcher.hpp"
+#include <memory>
 
 using namespace cannect;
 
-void CanDispatcher::attach(ICanObserver *canObserver)
+void CanDispatcher::attach(std::shared_ptr<ICanObserver> canObserver)
 {
-  if (canObserver == nullptr)
-  {
-    return;
-  }
-
-  observers.push_back(canObserver);
-}
-
-void CanDispatcher::detach(ICanObserver *canObserver)
-{
-  observers.remove(canObserver);
-}
-
-void CanDispatcher::notify()
-{
-  for (auto &frame : canFrames)
-  {
-    for (auto *observer : observers)
+    if (canObserver == nullptr)
     {
-      if (observer != nullptr)
-      {
-        observer->update(frame);
-      }
+        return;
     }
-  }
-  canFrames.clear();
+
+    observers.push_back(canObserver);
 }
 
-void CanDispatcher::addFrame(CanFrame &canFrame)
+void CanDispatcher::detach(std::shared_ptr<ICanObserver> canObserver)
 {
-  canFrames.push_back(canFrame);
+    observers.remove(canObserver);
+}
+
+void CanDispatcher::notify(CanFrame &canFrame)
+{
+    for (auto observer : observers)
+    {
+        if (observer != nullptr)
+        {
+            observer->update(canFrame);
+        }
+    }
 }

@@ -1,62 +1,62 @@
 #include "cannect/core/CanListener.hpp"
+#include <memory>
 
 using namespace cannect;
 
-CanListener::CanListener(ICanTransport *socket) : socket(socket), running(false)
+CanListener::CanListener(std::shared_ptr<ICanTransport> canTransport) : canTransport(canTransport), running(false)
 {
 }
 
 CanListener::~CanListener()
 {
-  stop();
+    stop();
 }
 
 void CanListener::start()
 {
-  bool expected = false;
-  if (!running.compare_exchange_strong(expected, true))
-  {
-    return;
-  }
-  if (!socket->isOpen())
-  {
-    socket->open();
-  }
-  listenerThread = std::thread(&CanListener::runner, this);
+    bool expected = false;
+    if (!running.compare_exchange_strong(expected, true))
+    {
+        return;
+    }
+    if (!canTransport->isOpen())
+    {
+        canTransport->open();
+    }
+    listenerThread = std::thread(&CanListener::runner, this);
 }
 
 void CanListener::stop()
 {
-  if (!running.exchange(false))
-  {
-    return;
-  }
+    if (!running.exchange(false))
+    {
+        return;
+    }
 
-  if (listenerThread.joinable())
-  {
-    listenerThread.join();
-  }
+    if (listenerThread.joinable())
+    {
+        listenerThread.join();
+    }
 }
 
 bool CanListener::isRunning()
 {
-  return running.load();
+    return running.load();
 }
 
-void CanListener::addObserver(ICanObserver *canObserver)
+void CanListener::addObserver(std::shared_ptr<ICanObserver> canObserver)
 {
-  canDispatcher.attach(canObserver);
+    canDispatcher.attach(canObserver);
 }
 
 void CanListener::runner()
 {
-  while (running.load())
-  {
-    CanFrame frame{};
-    if (socket->readFrame(frame) > 0)
+    while (running.load())
     {
-      canDispatcher.addFrame(frame);
-      canDispatcher.notify();
+        CanFrame frame{};
+        if (canTransport->readFrame(frame) > 0)
+        {
+            canDispatcher.notify(frame);
+        }
     }
-  }
 }

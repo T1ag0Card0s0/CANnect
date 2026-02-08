@@ -4,7 +4,7 @@ using namespace cannect;
 
 int main(int argc, char *argv[])
 {
-  Cannect cannect;
+    Cannect cannect;
 
-  return cannect.run(argc, argv);
+    return cannect.run(argc, argv);
 }

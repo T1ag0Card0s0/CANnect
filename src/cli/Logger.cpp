@@ -6,9 +6,9 @@ Logger *Logger::instance = nullptr;
 
 Logger *Logger::getInstance()
 {
-  if (instance == nullptr)
-  {
-    instance = new Logger();
-  }
-  return instance;
+    if (instance == nullptr)
+    {
+        instance = new Logger();
+    }
+    return instance;
 }

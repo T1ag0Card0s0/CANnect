@@ -3,24 +3,22 @@
 #include "ICanObserver.hpp"
 
 #include <list>
-#include <vector>
+#include <memory>
 
 namespace cannect
 {
 
-  class CanDispatcher
-  {
-  public:
-    CanDispatcher() = default;
-    ~CanDispatcher() = default;
-    void attach(ICanObserver *canObserver);
-    void detach(ICanObserver *canObserver);
-    void notify();
-    void addFrame(CanFrame &canFrame);
+    class CanDispatcher
+    {
+      public:
+        CanDispatcher() = default;
+        ~CanDispatcher() = default;
+        void attach(std::shared_ptr<ICanObserver> canObserver);
+        void detach(std::shared_ptr<ICanObserver> canObserver);
+        void notify(CanFrame &canFrame);
 
-  private:
-    std::list<ICanObserver *> observers;
-    std::vector<CanFrame> canFrames;
-  };
+      private:
+        std::list<std::shared_ptr<ICanObserver>> observers;
+    };
 
 } // namespace cannect

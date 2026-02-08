@@ -4,7 +4,7 @@
 
 using namespace cannect;
 
-void CanLogger::update(CanFrame &canFrame)
+void CanLogger::update(const CanFrame &canFrame)
 {
-  std::cout << canFrame << std::endl;
+    std::cout << canFrame << std::endl;
 }

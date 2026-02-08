@@ -45,7 +45,7 @@ You can run CANnect with various options. Some common examples:
   ```
 
 ### Common Options
-- `--iface`      : CAN interface name (e.g. can0, vcan0)
+- `--can-iface`      : CAN interface name (e.g. can0, vcan0)
 - `--iface-a`    : Source CAN interface (for bridge)
 - `--iface-b`    : Destination CAN interface (for bridge)
 - `--protocol`   : Protocol: raw | canopen | cants (default: raw)
@@ -59,7 +59,7 @@ You can run CANnect with various options. Some common examples:
 
 For more advanced usage, combine options as needed.
 
-
+### To create a virtual CAN interface
 ```bash
 #!/bin/bash
 # Make sure the script runs with super user privileges.
@@ -71,4 +71,27 @@ ip link add dev vcan0 type vcan
 # Bring the virtual CAN interface online.
 ip link set up vcan0
 ```
-cansend vcan0 123#00FFAA5501020304
+
+### Add it to your project 
+
+Simple example of how it can be integrated in other projects.
+
+```
+#include "cannect/Cannect.hpp"
+
+using namespace cannect;
+
+int main(int argc, char *argv[])
+{
+  Cannect cannect;
+
+  return cannect.run(argc, argv);
+}
+```
+
+To compile the example:
+
+```bash
+g++ -c main.cpp -o main.o 
+g++ main.o libcannect.a -o my_project
+```

@@ -2,6 +2,7 @@ export VERSION = 0.0.1
 LIB_TARGET := libcannect.a
 EXE_TARGET := cannect
 BUILD_DIR := build
+DIST_DIR := $(BUILD_DIR)/dist
 SRC_DIR := src
 SRCS := Cannect.cpp \
 		core/SocketCanTransport.cpp \
@@ -19,7 +20,7 @@ DEPS := $(OBJS:.o=.d)
 PREFIX ?= $(HOME)/.local/bin
 
 CXX := g++
-CXXFLAGS := -Iinclude -DTARGET=\"$(EXE_TARGET)\" -DVERSION=\"$(VERSION)\" -Wall -Wextra -Wpedantic -O2 -MMD -MP -std=c++17 -g
+CXXFLAGS := -Iinclude -DTARGET=\"$(EXE_TARGET)\" -DVERSION=\"$(VERSION)\" -Wall -Wextra -Wpedantic -MMD -MP -O2 -std=c++17
 LDFLAGS :=
 AR := ar
 ARFLAGS := rcs
@@ -46,15 +47,27 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 format:
 	$(CLANG_FORMAT) -i $(FORMAT_FILES)
 
+release: all
+	rm -rf "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)"
+	mkdir -p "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)"/{inc,lib,bin}
+	cp -r include/* "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)/inc/"
+	cp "$(BUILD_DIR)/$(LIB_TARGET)" "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)/lib/"
+	cp "$(BUILD_DIR)/$(EXE_TARGET)" "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)/bin/"
+	cp "README.md" "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)"
+	tar -C "$(BUILD_DIR)" \
+	    -czvf "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION).tar.gz" \
+	    "$(EXE_TARGET)-$(VERSION)"
+
+
 clean:
 	rm -rf $(BUILD_DIR)
 
 install: $(TARGET)
 	install -d $(DESTDIR)$(PREFIX)
-	install -m 755 $(BUILD_DIR)/$(TARGET) $(DESTDIR)$(PREFIX)/$(TARGET)
+	install -m 755 $(BUILD_DIR)/$(EXE_TARGET) $(DESTDIR)$(PREFIX)/$(EXE_TARGET)
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/$(TARGET)
+	rm -f $(DESTDIR)$(PREFIX)/$(EXE_TARGET)
 
 test: $(LIB_TARGET)
 	$(MAKE) -C tests run

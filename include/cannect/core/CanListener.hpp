@@ -5,26 +5,27 @@
 #include "cannect/core/ICanTransport.hpp"
 
 #include <atomic>
+#include <memory>
 #include <thread>
 
 namespace cannect
 {
-  class CanListener
-  {
-  public:
-    CanListener(ICanTransport *socket);
-    ~CanListener();
-    void start();
-    void stop();
-    bool isRunning();
-    void addObserver(ICanObserver *canObserver);
+    class CanListener
+    {
+      public:
+        CanListener(std::shared_ptr<ICanTransport> canTransport);
+        ~CanListener();
+        void start();
+        void stop();
+        bool isRunning();
+        void addObserver(std::shared_ptr<ICanObserver> canObserver);
 
-  private:
-    void runner();
+      private:
+        void runner();
 
-    ICanTransport *socket;
-    CanDispatcher canDispatcher;
-    std::thread listenerThread;
-    std::atomic<bool> running;
-  };
+        std::shared_ptr<ICanTransport> canTransport;
+        CanDispatcher canDispatcher;
+        std::thread listenerThread;
+        std::atomic<bool> running;
+    };
 } // namespace cannect
