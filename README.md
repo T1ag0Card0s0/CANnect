@@ -23,42 +23,15 @@ The compiled binary will be located at `build/cannect`.
 
 You can run CANnect with various options. Some common examples:
 
-- **Listen to a CAN interface:**
+- **Run cannect listenning on device vcan0 with can-ts protocol and address 65**
   ```sh
-  ./build/cannect --iface can0
-  ```
-  Replace `can0` with your CAN interface name.
-
-- **Bridge two CAN interfaces:**
-  ```sh
-  ./build/cannect --iface-a can0 --iface-b can1
-  ```
-
-- **Use a specific protocol (e.g., CAN-TS):**
-  ```sh
-  ./build/cannect --iface can0 --protocol cants
+  ./build/cannect --can-iface vcan0 --protocol cants --addr 65
   ```
 
 - **Show all available options:**
   ```sh
   ./build/cannect --help
   ```
-
-### Common Options
-- `--can-iface`      : CAN interface name (e.g. can0, vcan0)
-- `--iface-a`    : Source CAN interface (for bridge)
-- `--iface-b`    : Destination CAN interface (for bridge)
-- `--protocol`   : Protocol: raw | canopen | cants (default: raw)
-- `--output`     : Output file (record)
-- `--input`      : Input file (replay)
-- `--filter`     : Frame filter expression
-- `--decode`     : Decode frames using selected protocol
-- `--id`         : CAN ID (hex)
-- `--data`       : CAN data bytes (e.g. "DE AD BE EF")
-- `--help`       : Show help message
-
-For more advanced usage, combine options as needed.
-
 ### To create a virtual CAN interface
 ```bash
 #!/bin/bash
@@ -70,28 +43,4 @@ modprobe vcan
 ip link add dev vcan0 type vcan
 # Bring the virtual CAN interface online.
 ip link set up vcan0
-```
-
-### Add it to your project 
-
-Simple example of how it can be integrated in other projects.
-
-```
-#include "cannect/Cannect.hpp"
-
-using namespace cannect;
-
-int main(int argc, char *argv[])
-{
-  Cannect cannect;
-
-  return cannect.run(argc, argv);
-}
-```
-
-To compile the example:
-
-```bash
-g++ -c main.cpp -o main.o 
-g++ main.o libcannect.a -o my_project
 ```
