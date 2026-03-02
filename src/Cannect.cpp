@@ -26,24 +26,6 @@ int Cannect::run(int argc, char **argv)
     argumentParser.addArgument("--protocol", ArgType::STRING, "Protocol: raw | canopen | cants (default: raw)");
     argumentParser.addArgument("--addr", ArgType::INT, "Local CAN-TS node address (0-255)");
     argumentParser.addArgument("--version", ArgType::NONE, "Version of CANnect application");
-    argumentParser.addArgument("--json", ArgType::BOOL, "Machine-readable JSON output");
-    argumentParser.addArgument("--output", ArgType::STRING, "Output file (record)");
-    argumentParser.addArgument("--decode", ArgType::BOOL, "Decode frames using selected protocol");
-
-    // Keep the rest if you want, but they aren't used yet:
-    argumentParser.addArgument("--iface-a", ArgType::STRING, "Source Can interface (for bridge)");
-    argumentParser.addArgument("--iface-b", ArgType::STRING, "Destination Can interface (for bridge)");
-    argumentParser.addArgument("--input", ArgType::STRING, "Input file (replay)");
-    argumentParser.addArgument("--speed", ArgType::FLOAT, "Replay speed factor (1.0 = realtime, 0 = max)");
-    argumentParser.addArgument("--loop", ArgType::INT, "Replay loop count (0 = infinite)");
-    argumentParser.addArgument("--filter", ArgType::STRING, "Frame filter expression (e.g. id=0x123, id=0x100-0x1FF)");
-    argumentParser.addArgument("--id", ArgType::STRING, "Can ID (hex)");
-    argumentParser.addArgument("--data", ArgType::STRING, "Can data bytes (e.g. \"DE AD BE EF\")");
-    argumentParser.addArgument("--period", ArgType::STRING, "Send period (e.g. 100ms, 1s)");
-    argumentParser.addArgument("--count", ArgType::INT, "Number of frames to send");
-    argumentParser.addArgument("--listen", ArgType::STRING, "Listen address (server mode, e.g. 0.0.0.0:5555)");
-    argumentParser.addArgument("--connect", ArgType::STRING, "Connect address (client mode, e.g. 10.0.0.5:5555)");
-    argumentParser.addArgument("--bidir", ArgType::BOOL, "Bidirectional forwarding");
 
     if (!argumentParser.parse(argc, argv))
     {
@@ -64,11 +46,6 @@ int Cannect::run(int argc, char **argv)
     }
 
     listener = std::make_unique<CanListener>(*socket);
-
-    if (argumentParser.has("--output"))
-    {
-        observers.push_back(std::make_unique<CanLogger>());
-    }
 
     std::string protocol = "raw";
     if (argumentParser.has("--protocol"))
