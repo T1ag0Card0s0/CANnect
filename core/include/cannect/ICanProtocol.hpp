@@ -1,9 +1,10 @@
 #pragma once
 
+#include "Status.hpp"
+#include "Types.hpp"
+
 #include <memory>
 #include <string>
-
-namespace can {
 
 class ProtocolContext {
 public:
@@ -31,4 +32,3 @@ public:
 
 using ICanProtocolPtr = std::unique_ptr<ICanProtocol>;
 
-} // namespace can

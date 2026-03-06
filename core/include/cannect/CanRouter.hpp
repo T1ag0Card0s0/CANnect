@@ -1,10 +1,14 @@
 #pragma once
 
+#include "ICanInterface.hpp"
+#include "IRxSink.hpp"
+#include "IFrameFilter.hpp"
+#include "ICanProtocol.hpp"
+#include "Types.hpp"
+
 #include <vector>
 #include <memory>
 #include <mutex>
-
-namespace can {
 
 class CanRouter : public IRxSink, public ProtocolContext {
 public:
@@ -111,4 +115,3 @@ private:
     mutable std::mutex mutex_;
 };
 
-} // namespace can

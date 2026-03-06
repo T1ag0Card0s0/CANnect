@@ -1,4 +1,6 @@
-#include <memory>
+#include "cannect/Cannect.hpp"
+#include "VirtualCanInterface.hpp"
+#include "SimpleCanOpenProtocol.hpp"
 
 int main() {
     using namespace can;

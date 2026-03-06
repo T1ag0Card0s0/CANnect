@@ -1,5 +1,5 @@
 #pragma once
-
+#include <span>
 #include <array>
 #include <cstdint>
 #include <optional>
@@ -10,7 +10,6 @@
 #include <functional>
 #include <chrono>
 
-namespace can {
 
 using InterfaceId = std::string;
 using Clock = std::chrono::steady_clock;
@@ -55,4 +54,3 @@ struct CanFrame {
     }
 };
 
-} // namespace can

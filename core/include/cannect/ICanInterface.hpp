@@ -1,9 +1,12 @@
 #pragma once
 
+#include "Status.hpp"
+#include "Types.hpp"
+#include "IRxSink.hpp"
+
+#include <cstdint>
 #include <memory>
 #include <string>
-
-namespace can {
 
 struct InterfaceConfig {
     uint32_t nominalBitrate{500000};
@@ -34,5 +37,3 @@ public:
     virtual ~ICanInterfaceFactory() = default;
     virtual ICanInterfacePtr create(const InterfaceId& id) = 0;
 };
-
-} // namespace can

@@ -1,6 +1,8 @@
 #pragma once
 
-namespace can {
+#include "Types.hpp"
+
+#include <cstdint>
 
 class IFrameFilter {
 public:
@@ -27,4 +29,3 @@ private:
     uint32_t maxId_;
 };
 
-} // namespace can

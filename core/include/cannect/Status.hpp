@@ -1,8 +1,7 @@
 #pragma once
 
 #include <string>
-
-namespace can {
+#include <optional>
 
 enum class ErrorCode {
     None,
@@ -49,4 +48,3 @@ private:
     Status status_{};
 };
 
-} // namespace can
