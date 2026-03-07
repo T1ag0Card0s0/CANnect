@@ -1,18 +1,18 @@
 #pragma once
 
 #include "cannect/ICanFrameHandler.hpp"
-#include "cannect/ICanFrameTransmiter.hpp"
+#include "cannect/ICanFrameTransmitter.hpp"
 #include "cannect/Status.hpp"
 
 namespace cannect
 {
 
-  class ICanProtocol: public ICanFrameHandler
-  {
-    public:
-      virtual ~ICanProtocol() = default;
+class ICanProtocol : public ICanFrameHandler
+{
+  public:
+    virtual ~ICanProtocol() = default;
 
-      virtual Status setFrameTransmiter(ICanFrameTransmiter &frameTansmiter) = 0;
-  };
+    virtual Status setFrameTransmitter(ICanFrameTransmitter &frameTransmitter) = 0;
+};
 
-}
+} // namespace cannect

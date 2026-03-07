@@ -1,8 +1,9 @@
 #pragma once
 
+#include "cannect/ICanFrameTransmitter.hpp"
 #include "cannect/Status.hpp"
 #include "cannect/Types.hpp"
-#include "cannect/ICanFrameTransmiter.hpp"
+
 #include <cstdint>
 #include <string>
 
@@ -16,7 +17,7 @@ enum class CanInterfaceStatus : uint8_t
     AlreadyOpen
 };
 
-class ICanInterface: public ICanFrameTransmiter
+class ICanInterface : public ICanFrameTransmitter
 {
   public:
     virtual ~ICanInterface() = default;

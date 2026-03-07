@@ -10,7 +10,7 @@ namespace cannect
 class SocketCanInterface : public ICanInterface
 {
   public:
-    SocketCanInterface(std::string name);
+    explicit SocketCanInterface(std::string name);
     SocketCanInterface(SocketCanInterface &&) = delete;
     SocketCanInterface(const SocketCanInterface &) = delete;
     SocketCanInterface &operator=(SocketCanInterface &&) = delete;

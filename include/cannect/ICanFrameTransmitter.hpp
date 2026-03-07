@@ -6,11 +6,11 @@
 namespace cannect
 {
 
-class ICanFrameHandler
+class ICanFrameTransmitter
 {
   public:
-    virtual ~ICanFrameHandler() = default;
-    virtual Status onFrame(const CanFrame &canFrame) = 0;
+    virtual ~ICanFrameTransmitter() = default;
+    virtual Status send(const CanFrame &canFrame) = 0;
 };
 
 } // namespace cannect

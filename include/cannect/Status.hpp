@@ -1,5 +1,8 @@
 #pragma once
 
+namespace cannect
+{
+
 #define STATUS_CODE_LIST                                                                                               \
     X(SUCCESS, 0, "Success")                                                                                           \
     X(UNSUCCESS, 1, "Unsuccess")                                                                                       \
@@ -41,3 +44,5 @@ inline const char *statusDescription(Status code)
         return "Unknown error";
     }
 }
+
+} // namespace cannect

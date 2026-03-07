@@ -4,15 +4,16 @@
 #include "cannect/Status.hpp"
 #include "cannect/Types.hpp"
 
-namespace cannect 
+namespace cannect
 {
 
-class CanTsProtocol: public ICanProtocol
+class CanTsProtocol : public ICanProtocol
 {
   public:
-    CanTsProtocol();
-    Status onFrame(const CanFrame frame) override;
-    Status setFrameTransmiter(ICanFrameTransmiter &frameTansmiter) override;
+    CanTsProtocol() = default;
+
+    Status onFrame(const CanFrame &frame) override;
+    Status setFrameTransmitter(ICanFrameTransmitter &frameTransmitter) override;
 
     Status sendUtm();
     Status sendTelecommand();
@@ -21,7 +22,7 @@ class CanTsProtocol: public ICanProtocol
     Status sendGetBlock();
 
   private:
-
+    ICanFrameTransmitter *transmitter = nullptr;
 };
 
-}
+} // namespace cannect
