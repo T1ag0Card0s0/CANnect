@@ -11,10 +11,6 @@ class SocketCanInterface : public ICanInterface
 {
   public:
     explicit SocketCanInterface(std::string name);
-    SocketCanInterface(SocketCanInterface &&) = delete;
-    SocketCanInterface(const SocketCanInterface &) = delete;
-    SocketCanInterface &operator=(SocketCanInterface &&) = delete;
-    SocketCanInterface &operator=(const SocketCanInterface &) = delete;
     ~SocketCanInterface();
 
     Status open() override;

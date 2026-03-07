@@ -114,7 +114,7 @@ Status SocketCanInterface::receive(CanFrame &canFrame)
     }
     canFrame.id = kernelFrame.can_id & CAN_EFF_MASK;
     canFrame.dlc = kernelFrame.can_dlc;
-    memcpy(canFrame.data, kernelFrame.data, kernelFrame.can_dlc);
+    memcpy(canFrame.data.data(), kernelFrame.data, kernelFrame.can_dlc);
     return Status::SUCCESS;
 }
 
@@ -147,7 +147,7 @@ Status SocketCanInterface::send(const CanFrame &canFrame)
     }
 
     kernelFrame.can_dlc = canFrame.dlc;
-    std::memcpy(kernelFrame.data, canFrame.data, canFrame.dlc);
+    std::memcpy(kernelFrame.data, canFrame.data.data(), canFrame.dlc);
 
     int bytesWritten = ::write(this->fd, &kernelFrame, sizeof(struct can_frame));
 
@@ -161,7 +161,4 @@ Status SocketCanInterface::send(const CanFrame &canFrame)
 
 bool SocketCanInterface::isClosed() const { return !this->isOpen; }
 
-std::string SocketCanInterface::getName()
-{
-  return this->name;
-}
+std::string SocketCanInterface::getName() { return this->name; }

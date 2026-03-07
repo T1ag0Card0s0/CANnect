@@ -20,7 +20,7 @@ enum class FrameType
     Overload
 };
 
-struct CanFrame
+struct __attribute__((__packed__)) CanFrame
 {
     uint32_t id = 0;
     uint8_t dlc = 0;

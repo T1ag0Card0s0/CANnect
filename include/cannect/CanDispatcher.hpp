@@ -5,7 +5,7 @@
 #include "cannect/IFilter.hpp"
 #include "cannect/Status.hpp"
 
-#include <functional>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
@@ -20,9 +20,15 @@ class CanDispatcher
     CanDispatcher() = default;
     ~CanDispatcher();
 
-    Status addInterface(ICanInterface &canInterface);
-    Status addReceiver(const std::string &interfaceName, ICanFrameHandler &receiver);
-    Status addFilter(const std::string &interfaceName, IFilter &filter);
+    CanDispatcher(const CanDispatcher &) = delete;
+    CanDispatcher &operator=(const CanDispatcher &) = delete;
+    CanDispatcher(CanDispatcher &&) = delete;
+    CanDispatcher &operator=(CanDispatcher &&) = delete;
+
+    Status addInterface(std::shared_ptr<ICanInterface> canInterface);
+
+    Status addReceiver(const std::string &interfaceName, std::shared_ptr<ICanFrameHandler> receiver);
+    Status addFilter(const std::string &interfaceName, std::shared_ptr<IFilter> filter);
 
     void start();
     void stop();
@@ -30,14 +36,15 @@ class CanDispatcher
   private:
     struct DispatcherEntry
     {
-        ICanInterface &canInterface;
-        std::vector<std::reference_wrapper<IFilter>> filters;
-        std::vector<std::reference_wrapper<ICanFrameHandler>> receivers;
-        std::thread ifaceThread;
+        std::shared_ptr<ICanInterface> canInterface;
+
+        std::vector<std::shared_ptr<IFilter>> filters;
+        std::vector<std::shared_ptr<ICanFrameHandler>> receivers;
+
+        std::unique_ptr<std::thread> ifaceThread;
     };
 
     DispatcherEntry *findEntry(const std::string &interfaceName);
-
     void runInterface(DispatcherEntry &entry);
 
     std::vector<DispatcherEntry> dispatcherEntries;

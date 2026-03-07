@@ -13,7 +13,7 @@ class CanTsProtocol : public ICanProtocol
     CanTsProtocol() = default;
 
     Status onFrame(const CanFrame &frame) override;
-    Status setFrameTransmitter(ICanFrameTransmitter &frameTransmitter) override;
+    Status setFrameTransmitter(std::shared_ptr<ICanFrameTransmitter> transmitter) override;
 
     Status sendUtm();
     Status sendTelecommand();
@@ -22,7 +22,7 @@ class CanTsProtocol : public ICanProtocol
     Status sendGetBlock();
 
   private:
-    ICanFrameTransmitter *transmitter = nullptr;
+    std::shared_ptr<ICanFrameTransmitter> transmitter;
 };
 
 } // namespace cannect
