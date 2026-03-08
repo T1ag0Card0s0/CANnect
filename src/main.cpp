@@ -1,13 +1,13 @@
-#include "cannect/CanDispatcher.hpp"
 #include "SocketCanInterface.hpp"
+#include "cannect/CanDispatcher.hpp"
 #include "cannect/ICanFrameHandler.hpp"
-#include "cannect/Logger.hpp"
 #include "cannect/LogSinks.hpp"
+#include "cannect/Logger.hpp"
 
+#include <atomic>
+#include <csignal>
 #include <iostream>
 #include <memory>
-#include <csignal>
-#include <atomic>
 #include <thread>
 
 using namespace cannect;
@@ -16,16 +16,16 @@ std::atomic<bool> running = true;
 
 class PrintFrameHandler : public ICanFrameHandler
 {
-public:
+  public:
     Status onFrame(const CanFrame &frame) override
     {
-        std::cout << "Received frame ID: 0x"
-                  << std::hex << frame.id
-                  << " DLC: " << std::dec << (int)frame.dlc
+        std::cout << "Received frame ID: 0x" << std::hex << frame.id << " DLC: " << std::dec << (int)frame.dlc
                   << " Data: ";
 
         for (int i = 0; i < frame.dlc; i++)
+        {
             std::cout << std::hex << (int)frame.data[i] << " ";
+        }
 
         std::cout << std::dec << std::endl;
 
@@ -33,10 +33,7 @@ public:
     }
 };
 
-void signalHandler(int)
-{
-    running = false;
-}
+void signalHandler(int) { running = false; }
 
 int main()
 {
@@ -67,7 +64,9 @@ int main()
     LOG_INFO("Dispatcher started");
 
     while (running)
+    {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
     LOG_INFO("Stopping dispatcher");
     dispatcher.stop();
