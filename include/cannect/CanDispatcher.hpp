@@ -30,10 +30,10 @@ class CanDispatcher
   private:
     struct DispatcherEntry
     {
-        std::shared_ptr<ICanInterface>              canInterface;
-        std::vector<std::shared_ptr<IFilter>>          filters;
+        std::shared_ptr<ICanInterface> canInterface;
+        std::vector<std::shared_ptr<IFilter>> filters;
         std::vector<std::shared_ptr<ICanFrameHandler>> receivers;
-        std::unique_ptr<std::thread>                ifaceThread;
+        std::unique_ptr<std::thread> ifaceThread;
     };
 
     DispatcherEntry *findEntry(const std::string &interfaceName);

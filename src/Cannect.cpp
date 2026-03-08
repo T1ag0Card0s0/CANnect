@@ -5,7 +5,6 @@
 #include <atomic>
 #include <condition_variable>
 #include <csignal>
-#include <thread>
 
 using namespace cannect;
 
