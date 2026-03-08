@@ -20,13 +20,7 @@ class CanDispatcher
     CanDispatcher() = default;
     ~CanDispatcher();
 
-    CanDispatcher(const CanDispatcher &) = delete;
-    CanDispatcher &operator=(const CanDispatcher &) = delete;
-    CanDispatcher(CanDispatcher &&) = delete;
-    CanDispatcher &operator=(CanDispatcher &&) = delete;
-
     Status addInterface(std::shared_ptr<ICanInterface> canInterface);
-
     Status addReceiver(const std::string &interfaceName, std::shared_ptr<ICanFrameHandler> receiver);
     Status addFilter(const std::string &interfaceName, std::shared_ptr<IFilter> filter);
 
@@ -36,12 +30,10 @@ class CanDispatcher
   private:
     struct DispatcherEntry
     {
-        std::shared_ptr<ICanInterface> canInterface;
-
-        std::vector<std::shared_ptr<IFilter>> filters;
+        std::shared_ptr<ICanInterface>              canInterface;
+        std::vector<std::shared_ptr<IFilter>>          filters;
         std::vector<std::shared_ptr<ICanFrameHandler>> receivers;
-
-        std::unique_ptr<std::thread> ifaceThread;
+        std::unique_ptr<std::thread>                ifaceThread;
     };
 
     DispatcherEntry *findEntry(const std::string &interfaceName);

@@ -19,6 +19,7 @@ BraceWrapping:
   BeforeCatch: true
   BeforeElse: true
 
+InsertBraces: true
 SpaceBeforeParens: ControlStatements
 
 AlignConsecutiveDeclarations: false
