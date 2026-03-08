@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include <cstdint>
 
 namespace cannect
@@ -24,7 +23,7 @@ struct __attribute__((__packed__)) CanFrame
 {
     uint32_t id = 0;
     uint8_t dlc = 0;
-    std::array<uint8_t, 8> data = {};
+    uint8_t data[8] = {};
 };
 
 } // namespace cannect

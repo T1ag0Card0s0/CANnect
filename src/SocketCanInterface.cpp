@@ -132,7 +132,7 @@ Status SocketCanInterface::receive(CanFrame &canFrame)
 
     canFrame.id = kernelFrame.can_id & CAN_EFF_MASK;
     canFrame.dlc = kernelFrame.can_dlc;
-    std::memcpy(canFrame.data.data(), kernelFrame.data, kernelFrame.can_dlc);
+    std::memcpy(canFrame.data, kernelFrame.data, kernelFrame.can_dlc);
 
     LOG_DEBUG("Frame received on " + this->name + ": id=0x" +
               [&] {
@@ -176,7 +176,7 @@ Status SocketCanInterface::send(const CanFrame &canFrame)
     }
 
     kernelFrame.can_dlc = canFrame.dlc;
-    std::memcpy(kernelFrame.data, canFrame.data.data(), canFrame.dlc);
+    std::memcpy(kernelFrame.data, canFrame.data, canFrame.dlc);
 
     int bytesWritten = ::write(this->fd, &kernelFrame, sizeof(struct can_frame));
     if (bytesWritten != static_cast<int>(sizeof(struct can_frame)))
