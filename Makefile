@@ -13,7 +13,7 @@ TARGET = $(BUILD_DIR)/$(PROJECT_NAME)
 
 LIB_SRCS := $(filter-out src/main.cpp, $(wildcard src/*.cpp))
 LIB_OBJS := $(patsubst src/%.cpp, $(OBJS_DIR)/%.o, $(LIB_SRCS))
-MAIN_OBJ := $(OBJS_DIR)/main.o
+MAIN_OBJ := $(OBJS_DIR)/main.o $(OBJS_DIR)/CanDispatcher.o $(OBJS_DIR)/Logger.o $(OBJS_DIR)/SocketCanInterface.o
 
 all: $(TARGET)
 
