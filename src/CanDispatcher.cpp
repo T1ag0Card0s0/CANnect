@@ -1,5 +1,7 @@
 #include "cannect/CanDispatcher.hpp"
 
+#include "cannect/Logger.hpp"
+
 namespace cannect
 {
 
@@ -7,8 +9,10 @@ CanDispatcher::~CanDispatcher() { stop(); }
 
 Status CanDispatcher::addInterface(std::shared_ptr<ICanInterface> canInterface)
 {
+    LOG_DEBUG("Adding interface " + canInterface->getName());
     if (!canInterface)
     {
+        LOG_ERROR("CAN interface is nullptr");
         return Status::INVALID_ARGUMENT;
     }
 
@@ -16,22 +20,28 @@ Status CanDispatcher::addInterface(std::shared_ptr<ICanInterface> canInterface)
 
     if (running)
     {
+        LOG_ERROR("Dispatcher is not running");
         return Status::UNSUCCESS;
     }
 
     if (findEntry(canInterface->getName()))
     {
+        LOG_ERROR("CAN interface already exists.");
         return Status::INTERFACE_ALREADY_OPEN;
     }
 
+    LOG_INFO("Successfuly added CAN interface " + canInterface->getName());
     dispatcherEntries.push_back({std::move(canInterface), {}, {}, nullptr});
     return Status::SUCCESS;
 }
 
 Status CanDispatcher::addReceiver(const std::string &interfaceName, std::shared_ptr<ICanFrameHandler> receiver)
 {
+    LOG_DEBUG("Adding CAN frame receiver for " + interfaceName);
+
     if (!receiver)
     {
+        LOG_ERROR("CAN receiver is nullptr");
         return Status::INVALID_ARGUMENT;
     }
 
@@ -40,17 +50,22 @@ Status CanDispatcher::addReceiver(const std::string &interfaceName, std::shared_
     DispatcherEntry *entry = findEntry(interfaceName);
     if (!entry)
     {
+        LOG_ERROR("Could not find CAN interface " + interfaceName);
         return Status::INTERFACE_INVALID_NAME;
     }
 
+    LOG_INFO("Added CAN receiver to " + interfaceName);
     entry->receivers.push_back(std::move(receiver));
     return Status::SUCCESS;
 }
 
 Status CanDispatcher::addFilter(const std::string &interfaceName, std::shared_ptr<IFilter> filter)
 {
+    LOG_DEBUG("Adding CAN frame receiver for " + interfaceName);
+
     if (!filter)
     {
+        LOG_ERROR("Filter for " + interfaceName + "is nullptr");
         return Status::INVALID_ARGUMENT;
     }
 
@@ -59,9 +74,10 @@ Status CanDispatcher::addFilter(const std::string &interfaceName, std::shared_pt
     DispatcherEntry *entry = findEntry(interfaceName);
     if (!entry)
     {
+        LOG_ERROR("Could not find CAN interface " + interfaceName);
         return Status::INTERFACE_INVALID_NAME;
     }
-
+    LOG_INFO("Added filter to " + interfaceName);
     entry->filters.push_back(std::move(filter));
     return Status::SUCCESS;
 }
@@ -72,6 +88,7 @@ void CanDispatcher::start()
 
     if (running)
     {
+        LOG_WARNING("Dispatcher is already running");
         return;
     }
 
@@ -81,10 +98,11 @@ void CanDispatcher::start()
     {
         if (entry.canInterface->open() != Status::SUCCESS)
         {
+            LOG_WARNING("Failed to open " + entry.canInterface->getName());
             continue;
         }
-
         entry.ifaceThread = std::make_unique<std::thread>([this, &entry]() { runInterface(entry); });
+        LOG_DEBUG("Created thread for " + entry.canInterface->getName());
     }
 }
 
@@ -95,6 +113,7 @@ void CanDispatcher::stop()
 
         if (!running)
         {
+            LOG_WARNING("Dispatcher is already not running");
             return;
         }
 
@@ -113,6 +132,7 @@ void CanDispatcher::stop()
             entry.ifaceThread->join();
         }
     }
+    LOG_INFO("Stopped CAN dispatcher");
 }
 
 CanDispatcher::DispatcherEntry *CanDispatcher::findEntry(const std::string &interfaceName)
@@ -134,7 +154,8 @@ void CanDispatcher::runInterface(DispatcherEntry &entry)
         CanFrame frame;
         if (entry.canInterface->receive(frame) != Status::SUCCESS)
         {
-            break;
+            LOG_WARNING("Failed to receive CAN frame");
+            continue;
         }
 
         bool accepted = true;
@@ -142,6 +163,7 @@ void CanDispatcher::runInterface(DispatcherEntry &entry)
         {
             if (!filter->isValid(frame))
             {
+                LOG_DEBUG("Frame for " + entry.canInterface->getName() + "discarded");
                 accepted = false;
                 break;
             }

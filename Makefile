@@ -6,7 +6,8 @@ LIB_DIR = $(BUILD_DIR)/lib
 LIB = $(LIB_DIR)/lib$(PROJECT_NAME).a
 
 CXX := g++
-CXXFLAGS := -std=c++17 -O2 -MMD -MP -Wall -Wextra -Wpedantic -Werror -Iinclude
+# Log level 0=Debug ... 4=Off
+CXXFLAGS := -std=c++17 -O2 -MMD -MP -Wall -Wextra -Wpedantic -Werror -Iinclude -DLOG_LEVEL=0
 
 TARGET = $(BUILD_DIR)/$(PROJECT_NAME)
 
