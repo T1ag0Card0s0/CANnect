@@ -24,6 +24,7 @@ class SocketCanInterface : public ICanInterface
     std::string name;
     bool isOpen;
     int fd;
+    int pipeFds[2] = {-1, -1};
 };
 
 } // namespace cannect

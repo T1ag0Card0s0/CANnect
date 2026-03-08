@@ -76,6 +76,14 @@ Status SocketCanInterface::open()
         return Status::UNSUCCESS;
     }
 
+    if (::pipe(pipeFds) < 0)
+    {
+        LOG_ERROR("pipe() failed for " + this->name + ": " + std::strerror(errno));
+        ::close(this->fd);
+        this->fd = -1;
+        return Status::UNSUCCESS;
+    }
+
     this->isOpen = true;
     LOG_INFO("Interface " + this->name + " opened successfully (fd=" + std::to_string(this->fd) + ")");
     return Status::SUCCESS;
@@ -87,6 +95,14 @@ Status SocketCanInterface::close()
     {
         LOG_WARNING("close() called on " + this->name + " which is already closed");
         return Status::UNSUCCESS;
+    }
+
+    if (pipeFds[1] >= 0)
+    {
+        ::write(pipeFds[1], "x", 1);
+        ::close(pipeFds[0]);
+        ::close(pipeFds[1]);
+        pipeFds[0] = pipeFds[1] = -1;
     }
 
     if (this->fd >= 0 && ::close(this->fd) < 0)
@@ -109,17 +125,34 @@ Status SocketCanInterface::receive(CanFrame &canFrame)
         return Status::UNSUCCESS;
     }
 
+    fd_set readfds;
+    FD_ZERO(&readfds);
+    FD_SET(this->fd, &readfds);
+    FD_SET(pipeFds[0], &readfds);
+
+    int ret = ::select(std::max(this->fd, pipeFds[0]) + 1, &readfds, nullptr, nullptr, nullptr);
+    if (ret < 0)
+    {
+        if (errno == EINTR)
+        {
+            return Status::SUCCESS;
+        }
+        LOG_ERROR("select() failed on " + this->name + ": " + std::strerror(errno));
+        return Status::UNSUCCESS;
+    }
+
+    if (FD_ISSET(pipeFds[0], &readfds) || !this->isOpen)
+    {
+        LOG_DEBUG("receive() interrupted by shutdown on " + this->name);
+        return Status::UNSUCCESS;
+    }
+
     struct can_frame kernelFrame;
     std::memset(&kernelFrame, 0, sizeof(kernelFrame));
 
-    int nbytes = ::read(fd, &kernelFrame, sizeof(struct can_frame));
+    int nbytes = ::read(this->fd, &kernelFrame, sizeof(struct can_frame));
     if (nbytes < 0)
     {
-        if (errno == EAGAIN || errno == EWOULDBLOCK)
-        {
-            LOG_DEBUG("receive() on " + this->name + ": no data available (EAGAIN)");
-            return Status::SUCCESS;
-        }
         LOG_ERROR("read() failed on " + this->name + ": " + std::strerror(errno));
         return Status::UNSUCCESS;
     }
@@ -141,6 +174,7 @@ Status SocketCanInterface::receive(CanFrame &canFrame)
                   return std::string(buf);
               }() +
               " dlc=" + std::to_string(canFrame.dlc));
+
     return Status::SUCCESS;
 }
 
