@@ -1,0 +1,20 @@
+[DBG] [SocketCanInterface.cpp:20 SocketCanInterface] SocketCanInterface created for interface vcan0
+[DBG] [CanDispatcher.cpp:12 addInterface] Adding interface vcan0
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[DBG] [CanDispatcher.cpp:40 addReceiver] Adding CAN frame receiver for vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[DBG] [SocketCanInterface.cpp:51 open] Raw CAN socket created (fd=4)
+[DBG] [SocketCanInterface.cpp:64 open] Interface vcan0 resolved to ifindex=4
+[INF] [SocketCanInterface.cpp:88 open] Interface vcan0 opened successfully (fd=4)
+[DBG] [CanDispatcher.cpp:105 start] Created thread for vcan0
+[INF] [Cannect.cpp:52 start] Cannect started
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x00000123 dlc=4
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x00000123 dlc=4
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x00000123 dlc=4
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x00000123 dlc=4
+[INF] [SocketCanInterface.cpp:114 close] Interface vcan0 closed (fd=4)
+[ERR] [SocketCanInterface.cpp:156 receive] read() failed on vcan0: Bad file descriptor
+[WRN] [CanDispatcher.cpp:157 runInterface] Failed to receive CAN frame
+[INF] [CanDispatcher.cpp:135 stop] Stopped CAN dispatcher
+[INF] [Cannect.cpp:65 stop] Cannect stopped
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running

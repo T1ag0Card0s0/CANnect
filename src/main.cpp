@@ -31,6 +31,7 @@ class PrintFrameHandler : public ICanFrameHandler
 int main()
 {
     Logger::instance()->addSink(std::make_shared<ConsoleSink>());
+    Logger::instance()->addSink(std::make_shared<FileSink>("log.txt"));
 
     Cannect app;
 
