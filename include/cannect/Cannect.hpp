@@ -1,12 +1,12 @@
 #pragma once
 
-#include "cannect/cli/ArgumentParser.hpp"
-#include "cannect/core/CanListener.hpp"
-#include "cannect/core/ICanObserver.hpp"
-#include "cannect/core/ICanTransport.hpp"
+#include "cannect/CanDispatcher.hpp"
+#include "cannect/ICanFrameHandler.hpp"
+#include "cannect/ICanInterface.hpp"
+#include "cannect/Status.hpp"
 
 #include <memory>
-#include <vector>
+#include <string>
 
 namespace cannect
 {
@@ -14,17 +14,19 @@ namespace cannect
 class Cannect
 {
   public:
-    Cannect();
+    Cannect() = default;
     ~Cannect();
 
-    int run(int argc, char **argv);
+    Status addHandler(std::shared_ptr<ICanInterface> canInterface, std::shared_ptr<ICanFrameHandler> frameHandler);
+    Status addFilter(const std::string &interfaceName, std::shared_ptr<IFilter> filter);
+
+    Status run();
+    Status start();
+    void stop();
 
   private:
-    ArgumentParser argumentParser;
-
-    std::unique_ptr<ICanTransport> socket;
-    std::unique_ptr<CanListener> listener;
-    std::vector<std::unique_ptr<ICanObserver>> observers;
+    CanDispatcher dispatcher;
+    bool running = false;
 };
 
 } // namespace cannect

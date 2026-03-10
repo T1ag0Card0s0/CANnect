@@ -1,87 +1,42 @@
-export VERSION = 0.0.1
-LIB_TARGET := libcannect.a
-EXE_TARGET := cannect
-BUILD_DIR := build
-DIST_DIR := $(BUILD_DIR)/dist
-SRC_DIR := src
-SRCS := Cannect.cpp \
-		core/SocketCanTransport.cpp \
-		core/CanFrame.cpp core/CanDispatcher.cpp \
-		core/CanListener.cpp \
-		core/CanSender.cpp \
-		core/cants/CanTsProtocol.cpp \
-		cli/ArgumentParser.cpp \
-		cli/Logger.cpp \
-		cli/CanLogger.cpp 
-
-OBJS := $(SRCS:%.cpp=$(BUILD_DIR)/%.o)
-DEPS := $(OBJS:.o=.d)
-
-PREFIX ?= $(HOME)/.local/bin
+VERSION = 0.1.0
+PROJECT_NAME = cannect
+BUILD_DIR = build
+OBJS_DIR = $(BUILD_DIR)/objs
+LIB_DIR = $(BUILD_DIR)/lib
+LIB = $(LIB_DIR)/lib$(PROJECT_NAME).a
 
 CXX := g++
-CXXFLAGS := -Iinclude -DTARGET=\"$(EXE_TARGET)\" -DVERSION=\"$(VERSION)\" -std=c++17 -O2 -MMD -MP -Wall -Wextra -Wpedantic -Werror
+# Log level 0=Debug ... 4=Off
+CXXFLAGS := -std=c++17 -O2 -MMD -MP -Wall -Wextra -Wpedantic -Werror -Iinclude -DLOG_LEVEL=0
 
-LDFLAGS :=
-AR := ar
-ARFLAGS := rcs
+TARGET = $(BUILD_DIR)/$(PROJECT_NAME)
 
-CLANG_FORMAT ?= clang-format
-FORMAT_FILES := $(shell find . -name "*.cpp" -o -name "*.hpp")
+LIB_OBJS := $(OBJS_DIR)/CanDispatcher.o $(OBJS_DIR)/Logger.o $(OBJS_DIR)/SocketCanInterface.o $(OBJS_DIR)/Cannect.o
+MAIN_OBJ := $(OBJS_DIR)/main.o 
+all: $(TARGET)
 
-all: $(EXE_TARGET) 
+$(LIB): $(LIB_OBJS) | $(LIB_DIR)
+	ar rcs $@ $^
 
-$(EXE_TARGET): $(LIB_TARGET)
-	$(CXX) $(CXXFLAGS) -c $(SRC_DIR)/main.cpp -o $(BUILD_DIR)/main.o 
-	$(CXX) $(BUILD_DIR)/main.o $(BUILD_DIR)/$^ $(LDFLAGS) -o $(BUILD_DIR)/$@
+$(TARGET): $(MAIN_OBJ) $(LIB) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(LIB_TARGET): $(OBJS)
-	$(AR) $(ARFLAGS) $(BUILD_DIR)/$@ $^
-
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
-	@mkdir -p $(dir $@)
+$(OBJS_DIR)/%.o: src/%.cpp | $(OBJS_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-format:
-	$(CLANG_FORMAT) -i $(FORMAT_FILES)
+$(BUILD_DIR) $(OBJS_DIR) $(LIB_DIR):
+	mkdir -p $@
 
-release: all
-	rm -rf "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)"
-	mkdir -p "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)"/{inc,lib,bin}
-	cp -r include/* "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)/inc/"
-	cp "$(BUILD_DIR)/$(LIB_TARGET)" "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)/lib/"
-	cp "$(BUILD_DIR)/$(EXE_TARGET)" "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)/bin/"
-	cp "README.md" "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION)"
-	tar -C "$(BUILD_DIR)" \
-	    -czvf "$(BUILD_DIR)/$(EXE_TARGET)-$(VERSION).tar.gz" \
-	    "$(EXE_TARGET)-$(VERSION)"
-
+-include $(wildcard $(OBJS_DIR)/*.d)
 
 clean:
 	rm -rf $(BUILD_DIR)
 
-install: $(TARGET)
-	install -d $(DESTDIR)$(PREFIX)
-	install -m 755 $(BUILD_DIR)/$(EXE_TARGET) $(DESTDIR)$(PREFIX)/$(EXE_TARGET)
-
-uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/$(EXE_TARGET)
-
-test: $(LIB_TARGET)
+test: all
 	$(MAKE) -C tests run
 
-coverage: CXXFLAGS+=--coverage
-coverage: LDFLAGS+=--coverage
-coverage: test
-	lcov --capture --directory $(BUILD_DIR) --output-file $(BUILD_DIR)/coverage.info --rc lcov_branch_coverage=1 --ignore-errors inconsistent
-	lcov --remove $(BUILD_DIR)/coverage.info '*/tests/*' '*/include/*' --output-file $(BUILD_DIR)/coverage.info.cleaned --rc lcov_branch_coverage=1
-	genhtml $(BUILD_DIR)/coverage.info.cleaned --output-directory $(BUILD_DIR)/coverage-report --rc lcov_branch_coverage=1
-	@echo "Coverage report generated in build/coverage-report/index.html"
+export LIB
+export PROJECT_NAME
 
--include $(DEPS)
-
-.PHONY: all clean format install uninstall test coverage
+.PHONY: all clean test
 
