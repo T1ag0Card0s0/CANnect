@@ -1,3 +1,4 @@
+#include "CanTsProtocol.hpp"
 #include "SocketCanInterface.hpp"
 #include "cannect/Cannect.hpp"
 #include "cannect/ICanFrameHandler.hpp"
@@ -32,11 +33,13 @@ int main()
 {
     Logger::instance()->addSink(std::make_shared<ConsoleSink>());
     Logger::instance()->addSink(std::make_shared<FileSink>("log.txt"));
-
     Cannect app;
 
-    if (app.addHandler(std::make_shared<SocketCanInterface>("vcan0"), std::make_shared<PrintFrameHandler>()) !=
-        Status::SUCCESS)
+    std::shared_ptr<SocketCanInterface> socketCanInterface = std::make_shared<SocketCanInterface>("vcan0"); 
+    std::shared_ptr<CanTsProtocol> cantsProtocol = std::make_shared<CanTsProtocol>(65);
+
+    cantsProtocol->setFrameTransmitter(socketCanInterface);
+    if (app.addHandler(socketCanInterface, std::make_shared<PrintFrameHandler>()) != Status::SUCCESS)
     {
         return -1;
     }

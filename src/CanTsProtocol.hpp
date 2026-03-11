@@ -7,6 +7,7 @@
 #include <functional>
 #include <unordered_map>
 #include <vector>
+#include <mutex>
 
 #define DEFAULT_TIMEOUT_MS 200
 
@@ -61,7 +62,7 @@ struct __attribute__((packed)) CanTsHeader
 class CanTsProtocol : public ICanProtocol
 {
   public:
-    CanTsProtocol() = default;
+    CanTsProtocol(uint8_t localAddress);
 
     using TcHandler = std::function<bool(uint8_t from, uint8_t channel, uint8_t request[CAN_FRAME_MAX_DATA])>;
     using TmHandler = std::function<bool(uint8_t from, uint8_t channel, uint8_t response[CAN_FRAME_MAX_DATA])>;
@@ -89,6 +90,7 @@ class CanTsProtocol : public ICanProtocol
     bool getBlock(uint8_t to, const std::vector<uint8_t> &addressLE, uint32_t timeoutMs = DEFAULT_TIMEOUT_MS);
 
   private:
+    void sendNack(CanTsHeader &h, const CanFrame &frame);
     void handleTelecommand(const CanTsHeader &h, const CanFrame &frame);
     void handleTelemetry(const CanTsHeader &h, const CanFrame &frame);
     void handleUnsolicited(const CanTsHeader &h, const CanFrame &frame);

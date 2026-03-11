@@ -1,4 +1,6 @@
 #include "CanTsProtocol.hpp"
+#include "cannect/Types.hpp"
+#include <cstring>
 
 using namespace cannect;
 
@@ -39,21 +41,29 @@ class EncoderDecoder
         return h;
     }
 };
+
+CanTsProtocol::CanTsProtocol(uint8_t localAddress)
+    : localAddress(localAddress)
+{
+
+}
+
 Status CanTsProtocol::setFrameTransmitter(std::shared_ptr<ICanFrameTransmitter> transmitter)
 {
     this->transmitter = std::move(transmitter);
     return Status::SUCCESS;
 }
 
-Status CanTsProtocol::onFrame(const CanFrame &frame)
+Status CanTsProtocol::onFrame(const CanFrame &frame __attribute__((unused)))
 {
     CanTsHeader header = EncoderDecoder::decode(frame.id);
 
     if (header.to != localAddress && header.to != 0)
     {
+        sendNack(header, frame);
         return Status::UNSUCCESS;
     }
-
+    
     switch (header.type)
     {
     case CanTsMessageType::TELECOMMAND:
@@ -81,33 +91,63 @@ Status CanTsProtocol::onFrame(const CanFrame &frame)
     return Status::SUCCESS;
 }
 
-void CanTsProtocol::handleTelecommand(const CanTsHeader &h, const CanFrame &frame) {}
-
-void CanTsProtocol::handleTelemetry(const CanTsHeader &h, const CanFrame &frame) {}
-
-void CanTsProtocol::handleUnsolicited(const CanTsHeader &h, const CanFrame &frame) {}
-
-void CanTsProtocol::handleTimeSync(const CanTsHeader &h, const CanFrame &frame) {}
-
-void CanTsProtocol::handleSetBlock(const CanTsHeader &h, const CanFrame &frame) {}
-
-void CanTsProtocol::handleGetBlock(const CanTsHeader &h, const CanFrame &frame) {}
-
-bool CanTsProtocol::sendTelecommand(uint8_t to, uint8_t channel, const uint8_t data[CAN_FRAME_MAX_DATA]) {}
-
-bool CanTsProtocol::requestTelemetry(uint8_t to, uint8_t channel) {}
-
-bool CanTsProtocol::sendUnsolicitedTelemetry(uint8_t to, uint8_t channel, const uint8_t data[CAN_FRAME_MAX_DATA]) {}
-
-bool CanTsProtocol::broadcastTimeSync(const uint8_t timeLE[CAN_FRAME_MAX_DATA]) {}
-
-bool CanTsProtocol::setBlock(uint8_t to, const std::vector<uint8_t> &addressLE, const std::vector<uint8_t> &data,
-                             uint32_t timeoutMs = DEFAULT_TIMEOUT_MS)
+void CanTsProtocol::sendNack(CanTsHeader &h, const CanFrame &frame)
 {
+    uint8_t tmp = h.from;
+    h.from = h.to;
+    h.to = tmp;
+    h.command |= 0xC000;
+
+    CanFrame nack = {};
+    nack.id = EncoderDecoder::encode(h);
+    nack.dlc = frame.dlc;
+
+    std::memcpy(nack.data, frame.data, sizeof(frame.data));
+    this->transmitter->send(nack);
 }
 
-bool CanTsProtocol::getBlock(uint8_t to, const std::vector<uint8_t> &addressLE, uint32_t timeoutMs = DEFAULT_TIMEOUT_MS)
+void CanTsProtocol::handleTelecommand(const CanTsHeader &h __attribute__((unused)), const CanFrame &frame __attribute__((unused))) 
 {
+    if((h.command >> 14) == 0)
+    {
+        CanTsHeader response = {.to = h.from, .from = localAddress, .command = , .type = CanTsMessageType::TELECOMMAND};
+    }
+}
+
+void CanTsProtocol::handleTelemetry(const CanTsHeader &h __attribute__((unused)), const CanFrame &frame __attribute__((unused))) {}
+
+void CanTsProtocol::handleUnsolicited(const CanTsHeader &h __attribute__((unused)), const CanFrame &frame __attribute__((unused))) {}
+
+void CanTsProtocol::handleTimeSync(const CanTsHeader &h __attribute__((unused)), const CanFrame &frame __attribute__((unused))) {}
+
+void CanTsProtocol::handleSetBlock(const CanTsHeader &h __attribute__((unused)), const CanFrame &frame __attribute__((unused))) {}
+
+void CanTsProtocol::handleGetBlock(const CanTsHeader &h __attribute__((unused)), const CanFrame &frame __attribute__((unused))) {}
+
+bool CanTsProtocol::sendTelecommand(uint8_t to __attribute__((unused)), uint8_t channect __attribute__((unused)), const uint8_t data[CAN_FRAME_MAX_DATA] __attribute__((unused))) {
+    return true;
+}
+
+bool CanTsProtocol::requestTelemetry(uint8_t to __attribute__((unused)), uint8_t channect __attribute__((unused))) {
+    return true;
+}
+
+bool CanTsProtocol::sendUnsolicitedTelemetry(uint8_t to __attribute__((unused)), uint8_t channect __attribute__((unused)), const uint8_t data[CAN_FRAME_MAX_DATA] __attribute__((unused))) {
+    return true;
+}
+
+bool CanTsProtocol::broadcastTimeSync(const uint8_t timeLE[CAN_FRAME_MAX_DATA] __attribute__((unused))) {
+    return true;
+}
+
+bool CanTsProtocol::setBlock(uint8_t to __attribute__((unused)), const std::vector<uint8_t> &addressLE __attribute__((unused)), const std::vector<uint8_t> &data __attribute__((unused)), uint32_t timeoutMs __attribute__((unused)))
+{
+    return true;
+}
+
+bool CanTsProtocol::getBlock(uint8_t to __attribute__((unused)), const std::vector<uint8_t> &addressLE __attribute__((unused)), uint32_t timeoutMs __attribute__((unused)))
+{
+    return true;
 }
 
 void CanTsProtocol::setTelecommandHandler(TcHandler h)

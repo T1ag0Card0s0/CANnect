@@ -1,0 +1,18 @@
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[ERR] [SocketCanInterface.cpp:59 open] ioctl(SIOCGIFINDEX) failed for vcan0: No such device
+[WRN] [CanDispatcher.cpp:101 start] Failed to open vcan0
+[INF] [Cannect.cpp:52 start] Cannect started
+[WRN] [SocketCanInterface.cpp:96 close] close() called on vcan0 which is already closed
+[INF] [CanDispatcher.cpp:135 stop] Stopped CAN dispatcher
+[INF] [Cannect.cpp:65 stop] Cannect stopped
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[ERR] [SocketCanInterface.cpp:59 open] ioctl(SIOCGIFINDEX) failed for vcan0: No such device
+[WRN] [CanDispatcher.cpp:101 start] Failed to open vcan0
+[INF] [Cannect.cpp:52 start] Cannect started
+[WRN] [SocketCanInterface.cpp:96 close] close() called on vcan0 which is already closed
+[INF] [CanDispatcher.cpp:135 stop] Stopped CAN dispatcher
+[INF] [Cannect.cpp:65 stop] Cannect stopped
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
