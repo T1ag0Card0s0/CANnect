@@ -16,8 +16,8 @@ class Cannect
   public:
     Cannect() = default;
     ~Cannect();
-
-    Status addHandler(std::shared_ptr<ICanInterface> canInterface, std::shared_ptr<ICanFrameHandler> frameHandler);
+    Status addInterface(std::shared_ptr<ICanInterface> canInterface);
+    Status addHandler(std::string name, std::shared_ptr<ICanFrameHandler> frameHandler);
     Status addFilter(const std::string &interfaceName, std::shared_ptr<IFilter> filter);
 
     Status run();

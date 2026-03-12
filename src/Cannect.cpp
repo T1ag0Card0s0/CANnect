@@ -23,15 +23,13 @@ void signalHandler(int)
 
 Cannect::~Cannect() { stop(); }
 
-Status Cannect::addHandler(std::shared_ptr<ICanInterface> canInterface, std::shared_ptr<ICanFrameHandler> frameHandler)
+Status Cannect::addInterface(std::shared_ptr<ICanInterface> canInterface)
 {
-    const std::string name = canInterface->getName();
+    return dispatcher.addInterface(canInterface);
+}
 
-    if (Status s = dispatcher.addInterface(canInterface); s != Status::SUCCESS)
-    {
-        return s;
-    }
-
+Status Cannect::addHandler(std::string name, std::shared_ptr<ICanFrameHandler> frameHandler)
+{
     return dispatcher.addReceiver(name, frameHandler);
 }
 
