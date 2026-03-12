@@ -242,4 +242,4 @@ When contributing to CANnect:
 
 ## License
 
-[License information to be added]
+MIT License
