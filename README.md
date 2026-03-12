@@ -14,7 +14,7 @@ CANnect is a lightweight, modular C++ library designed to simplify CAN communica
 - **Flexible Filtering**: Apply custom filters to CAN frames before processing
 - **Comprehensive Logging**: Multi-sink logging system with console and file output
 - **SocketCAN Integration**: Native support for Linux SocketCAN interfaces
-- **CAN-TS Protocol Implementation**: Built-in support for CAN Time Synchronization protocol with block transfer capabilities
+- **CAN-TS Protocol Implementation**: Built-in support for CAN-TS protocol with block transfer capabilities
 
 ## Architecture
 
@@ -48,7 +48,7 @@ Linux SocketCAN implementation:
 - Full Linux socket-based CAN support
 
 #### **CanTsProtocol** (`src/CanTsProtocol.hpp`)
-CAN Time Synchronization protocol implementation:
+CAN-TS protocol implementation:
 - **Message Types**: TIMESYNC, UNSOLICITED, TELECOMMAND, TELEMETRY, SETBLOCK, GETBLOCK
 - **Block Memory Transfer**: Support for transferring blocks of data up to 512 bytes
 - **Request/ACK Handling**: Proper request acknowledgment mechanisms
