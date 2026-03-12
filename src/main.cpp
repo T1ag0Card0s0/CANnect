@@ -1,32 +1,16 @@
+#include "CanTsProtocol.hpp"
 #include "SocketCanInterface.hpp"
 #include "cannect/Cannect.hpp"
-#include "cannect/ICanFrameHandler.hpp"
 #include "cannect/LogSinks.hpp"
 #include "cannect/Logger.hpp"
 
+#include <cstdint>
+#include <iomanip>
 #include <iostream>
 #include <memory>
+#include <vector>
 
 using namespace cannect;
-
-class PrintFrameHandler : public ICanFrameHandler
-{
-  public:
-    Status onFrame(const CanFrame &frame) override
-    {
-        std::cout << "Received frame ID: 0x" << std::hex << frame.id << " DLC: " << std::dec << (int)frame.dlc
-                  << " Data: ";
-
-        for (int i = 0; i < frame.dlc; i++)
-        {
-            std::cout << std::hex << (int)frame.data[i] << " ";
-        }
-
-        std::cout << std::dec << std::endl;
-
-        return Status::SUCCESS;
-    }
-};
 
 int main()
 {
@@ -35,11 +19,54 @@ int main()
 
     Cannect app;
 
-    if (app.addHandler(std::make_shared<SocketCanInterface>("vcan0"), std::make_shared<PrintFrameHandler>()) !=
-        Status::SUCCESS)
+    auto iface = std::make_shared<SocketCanInterface>("vcan0");
+    auto proto = std::make_shared<CanTsProtocol>(65);
+    proto->setSetBlockHandler(
+        [](uint8_t from, uint8_t channel __attribute__((unused)), std::vector<uint8_t> &request) -> bool {
+            std::cout << "Received SETBLOCK from " << static_cast<int>(from) << ", size=" << request.size() << "\n";
+
+            std::cout << "Data: ";
+            for (uint8_t b : request)
+            {
+                std::cout << "0x" << std::hex << static_cast<int>(b) << " ";
+            }
+            std::cout << std::dec << "\n"; // restore decimal
+
+            return true;
+        });
+    proto->setFrameTransmitter(iface);
+
+    if (app.addInterface(iface) != Status::SUCCESS)
     {
-        return -1;
+        std::cerr << "Failed to add SocketCanInterface\n";
+        return 1;
     }
 
-    return app.run() == Status::SUCCESS ? 0 : -1;
+    if (app.addHandler(iface->getName(), proto) != Status::SUCCESS)
+    {
+        std::cerr << "Failed to add CanTsProtocol handler\n";
+        return 1;
+    }
+
+    // if (app.start() != Status::SUCCESS)
+    // {
+    //  std::cerr << "Failed to start Cannect\n";
+    //  return 1;
+    // }
+
+    // std::cout << "CAN-TS node started at address 65\n";
+
+    // constexpr uint8_t remoteNode = 10;
+
+    // std::vector<uint8_t> addressLE = {0x34, 0x12, 0x00, 0x00};
+
+    // std::vector<uint8_t> payload = {0xDE, 0xAD, 0xBE, 0xEF, 0x10, 0x20, 0x30, 0x40,
+    // 0x50, 0x60, 0x70, 0x80, 0x90, 0xA0, 0xB0, 0xC0};
+
+    // const bool ok = proto->setBlock(remoteNode, addressLE, payload, 1000);
+
+    // std::cout << "\nSETBLOCK result: " << (ok ? "SUCCESS" : "FAIL") << "\n";
+    app.run();
+    app.stop();
+    return 0;
 }

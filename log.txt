@@ -1,0 +1,462 @@
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[ERR] [SocketCanInterface.cpp:59 open] ioctl(SIOCGIFINDEX) failed for vcan0: No such device
+[WRN] [CanDispatcher.cpp:101 start] Failed to open vcan0
+[INF] [Cannect.cpp:52 start] Cannect started
+[WRN] [SocketCanInterface.cpp:96 close] close() called on vcan0 which is already closed
+[INF] [CanDispatcher.cpp:135 stop] Stopped CAN dispatcher
+[INF] [Cannect.cpp:65 stop] Cannect stopped
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[ERR] [SocketCanInterface.cpp:59 open] ioctl(SIOCGIFINDEX) failed for vcan0: No such device
+[WRN] [CanDispatcher.cpp:101 start] Failed to open vcan0
+[INF] [Cannect.cpp:52 start] Cannect started
+[WRN] [SocketCanInterface.cpp:96 close] close() called on vcan0 which is already closed
+[INF] [CanDispatcher.cpp:135 stop] Stopped CAN dispatcher
+[INF] [Cannect.cpp:65 stop] Cannect stopped
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[ERR] [CanDispatcher.cpp:29 addInterface] CAN interface already exists.
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[ERR] [CanDispatcher.cpp:29 addInterface] CAN interface already exists.
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[ERR] [CanDispatcher.cpp:29 addInterface] CAN interface already exists.
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[INF] [SocketCanInterface.cpp:88 open] Interface vcan0 opened successfully (fd=4)
+[INF] [Cannect.cpp:50 start] Cannect started
+[INF] [SocketCanInterface.cpp:114 close] Interface vcan0 closed (fd=4)
+[ERR] [SocketCanInterface.cpp:156 receive] read() failed on vcan0: Bad file descriptor
+[WRN] [CanDispatcher.cpp:157 runInterface] Failed to receive CAN frame
+[INF] [CanDispatcher.cpp:135 stop] Stopped CAN dispatcher
+[INF] [Cannect.cpp:63 stop] Cannect stopped
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[INF] [SocketCanInterface.cpp:88 open] Interface vcan0 opened successfully (fd=4)
+[INF] [Cannect.cpp:50 start] Cannect started
+[INF] [SocketCanInterface.cpp:114 close] Interface vcan0 closed (fd=4)
+[WRN] [CanDispatcher.cpp:157 runInterface] Failed to receive CAN frame
+[INF] [CanDispatcher.cpp:135 stop] Stopped CAN dispatcher
+[INF] [Cannect.cpp:63 stop] Cannect stopped
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[INF] [SocketCanInterface.cpp:88 open] Interface vcan0 opened successfully (fd=4)
+[INF] [Cannect.cpp:50 start] Cannect started
+[INF] [SocketCanInterface.cpp:114 close] Interface vcan0 closed (fd=4)
+[INF] [CanDispatcher.cpp:135 stop] Stopped CAN dispatcher
+[INF] [Cannect.cpp:63 stop] Cannect stopped
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[INF] [SocketCanInterface.cpp:88 open] Interface vcan0 opened successfully (fd=4)
+[INF] [Cannect.cpp:50 start] Cannect started
+[INF] [SocketCanInterface.cpp:114 close] Interface vcan0 closed (fd=4)
+[WRN] [CanDispatcher.cpp:157 runInterface] Failed to receive CAN frame
+[INF] [CanDispatcher.cpp:135 stop] Stopped CAN dispatcher
+[INF] [Cannect.cpp:63 stop] Cannect stopped
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
+[DBG] [SocketCanInterface.cpp:20 SocketCanInterface] SocketCanInterface created for interface vcan0
+[DBG] [CanDispatcher.cpp:12 addInterface] Adding interface vcan0
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[DBG] [CanDispatcher.cpp:40 addReceiver] Adding CAN frame receiver for vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[DBG] [SocketCanInterface.cpp:51 open] Raw CAN socket created (fd=4)
+[DBG] [SocketCanInterface.cpp:64 open] Interface vcan0 resolved to ifindex=5
+[INF] [SocketCanInterface.cpp:88 open] Interface vcan0 opened successfully (fd=4)
+[DBG] [CanDispatcher.cpp:105 start] Created thread for vcan0
+[INF] [Cannect.cpp:50 start] Cannect started
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x00000123 dlc=4
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x00000123 dlc=4
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x00000123 dlc=4
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x00000123 dlc=4
+[INF] [SocketCanInterface.cpp:114 close] Interface vcan0 closed (fd=4)
+[ERR] [SocketCanInterface.cpp:156 receive] read() failed on vcan0: Bad file descriptor
+[WRN] [CanDispatcher.cpp:157 runInterface] Failed to receive CAN frame
+[INF] [CanDispatcher.cpp:135 stop] Stopped CAN dispatcher
+[INF] [Cannect.cpp:63 stop] Cannect stopped
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
+[DBG] [SocketCanInterface.cpp:20 SocketCanInterface] SocketCanInterface created for interface vcan0
+[DBG] [CanDispatcher.cpp:12 addInterface] Adding interface vcan0
+[INF] [CanDispatcher.cpp:33 addInterface] Successfuly added CAN interface vcan0
+[DBG] [CanDispatcher.cpp:40 addReceiver] Adding CAN frame receiver for vcan0
+[INF] [CanDispatcher.cpp:57 addReceiver] Added CAN receiver to vcan0
+[DBG] [SocketCanInterface.cpp:51 open] Raw CAN socket created (fd=4)
+[DBG] [SocketCanInterface.cpp:64 open] Interface vcan0 resolved to ifindex=5
+[INF] [SocketCanInterface.cpp:88 open] Interface vcan0 opened successfully (fd=4)
+[DBG] [CanDispatcher.cpp:105 start] Created thread for vcan0
+[INF] [Cannect.cpp:50 start] Cannect started
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=6
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=6
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x0830800E dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x0411050E dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308083 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110503 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308084 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110504 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308085 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110505 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308086 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110506 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308087 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110507 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308088 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110508 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308089 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110509 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x0830808A dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x0411050A dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x0830808B dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x0411050B dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x0830808C dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x0411050C dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x0830808D dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x0411050D dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x0830808E dlc=7
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x0411050E dlc=7
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C2 dlc=2
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308002 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308080 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308081 dlc=8
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110501 dlc=8
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308082 dlc=5
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110502 dlc=5
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308300 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x041107C1 dlc=1
+[DBG] [SocketCanInterface.cpp:170 receive] Frame received on vcan0: id=0x08308180 dlc=0
+[DBG] [SocketCanInterface.cpp:223 send] Frame sent on vcan0: id=0x04110500 dlc=0
+[INF] [SocketCanInterface.cpp:114 close] Interface vcan0 closed (fd=4)
+[DBG] [SocketCanInterface.cpp:146 receive] receive() interrupted by shutdown on vcan0
+[WRN] [CanDispatcher.cpp:157 runInterface] Failed to receive CAN frame
+[INF] [CanDispatcher.cpp:135 stop] Stopped CAN dispatcher
+[INF] [Cannect.cpp:63 stop] Cannect stopped
+[WRN] [CanDispatcher.cpp:116 stop] Dispatcher is already not running
