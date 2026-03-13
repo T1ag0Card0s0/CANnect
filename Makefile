@@ -10,7 +10,7 @@ RELEASE_PKG = $(BUILD_DIR)/$(RELEASE_NAME).tar.gz
 
 CXX := g++
 # Log level 0=Debug ... 4=Off
-CXXFLAGS := -std=c++17 -O2 -MMD -MP -Wall -Wextra -Wpedantic -Werror -Iinclude -DLOG_LEVEL=0
+CXXFLAGS := -std=c++17 -O2 -MMD -MP -Wall -Wextra -Wpedantic -Werror -Iinclude -DLOG_LEVEL=3
 
 TARGET = $(BUILD_DIR)/$(PROJECT_NAME)
 

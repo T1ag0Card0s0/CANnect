@@ -1,0 +1,228 @@
+@startuml
+enum "cannect::Status" as C_0000750293408759289947
+enum C_0000750293408759289947 {
+SUCCESS
+UNSUCCESS
+INVALID_ARGUMENT
+INTERFACE_ALREADY_OPEN
+INTERFACE_INVALID_NAME
+}
+class "cannect::CanFrame" as C_0014330891771787198846
+class C_0014330891771787198846 {
+__
++data : uint8_t[8]
++dlc : uint8_t
++id : uint32_t
+}
+abstract "cannect::ICanFrameTransmitter" as C_0001064302059056516755
+abstract C_0001064302059056516755 {
++~ICanFrameTransmitter() = default : void
+..
+{abstract} +send(const CanFrame & canFrame) = 0 : Status
+__
+}
+abstract "cannect::ICanProtocol" as C_0013149467837282151620
+abstract C_0013149467837282151620 {
++~ICanProtocol() = default : void
+..
+{abstract} +setFrameTransmitter(std::shared_ptr<ICanFrameTransmitter> transmitter) = 0 : Status
+__
+}
+class "cannect::CanTsHeader" as C_0010758754600654656942
+class C_0010758754600654656942 {
+__
++command : uint16_t
++from : uint8_t
++to : uint8_t
++type : CanTsMessageType
+}
+class "cannect::CanTsProtocol" as C_0009333316555939099127
+class C_0009333316555939099127 {
++CanTsProtocol(uint8_t localAddress) : void
+..
+{static} -allBlocksReceived(const std::vector<bool> & received) : bool
+{static} -bitmapBitIsSet(const std::vector<uint8_t> & bitmap, uint8_t index) : bool
+{static} -bitmapSizeBytes(uint8_t numBlocks) : size_t
++broadcastTimeSync(const uint8_t * timeLE) : bool
++getBlock(uint8_t to, const std::vector<uint8_t> & addressLE, uint32_t timeoutMs = 200) : bool
++getLastGetBlockData(std::vector<uint8_t> & out) const : bool
++getLastTelemetry(uint8_t * out, uint8_t & dlc) const : bool
+-handleGetBlock(const CanTsHeader & h, const CanFrame & frame) : void
+-handleSetBlock(const CanTsHeader & h, const CanFrame & frame) : void
+-handleTelecommand(const CanTsHeader & h, const CanFrame & frame) : void
+-handleTelemetry(const CanTsHeader & h, const CanFrame & frame) : void
+-handleTimeSync(const CanTsHeader & h, const CanFrame & frame) : void
+-handleUnsolicited(const CanTsHeader & h, const CanFrame & frame) : void
++isPeerConnected(uint8_t peer, uint32_t timeoutMs) const : bool
+{static} -makeBitmap(const std::vector<bool> & received) : std::vector<uint8_t>
+-notePeerAlive(uint8_t peer) : void
++onFrame(const CanFrame & frame) : Status
++requestTelemetry(uint8_t to, uint8_t channel) : bool
+-sendFrame(const CanTsHeader & h, const uint8_t * data, uint8_t dlc) : bool
++sendKeepAlive(uint8_t channel, const uint8_t * data) : bool
++sendTelecommand(uint8_t to, uint8_t channel, const uint8_t * data) : bool
++sendUnsolicitedTelemetry(uint8_t to, uint8_t channel, const uint8_t * data) : bool
++setBlock(uint8_t to, const std::vector<uint8_t> & addressLE, const std::vector<uint8_t> & data, uint32_t timeoutMs = 200) : bool
++setFrameTransmitter(std::shared_ptr<ICanFrameTransmitter> transmitter) : Status
++setGetBlockHandler(GetBlockHandler handler) : void
++setSetBlockHandler(SetBlockHandler handler) : void
++setTelecommandHandler(TcHandler handler) : void
++setTelemetryHandler(TmHandler handler) : void
++setTimeSyncHandler(TimeSyncHandler handler) : void
++setUnsolicitedTelemetryHandler(UTMHandler handler) : void
+__
+-cv : std::condition_variable
+-gbSessions : std::unordered_map<uint8_t,BlockSession>
+-getBlockHandler : GetBlockHandler
+-lastGetBlockData : std::vector<uint8_t>
+-lastTelemetry : uint8_t[8]
+-lastTelemetryDlc : uint8_t
+-localAddress : uint8_t
+-mtx : std::mutex
+-peers : std::unordered_map<uint8_t,PeerState>
+-pendingGb : PendingGetBlock
+-pendingSb : PendingSetBlock
+-pendingTc : PendingTcTm
+-pendingTm : PendingTcTm
+-sbSessions : std::unordered_map<uint8_t,BlockSession>
+-setBlockHandler : SetBlockHandler
+-tcHandler : TcHandler
+-tmHandler : TmHandler
+-transmitter : std::shared_ptr<ICanFrameTransmitter>
+-tsHandler : TimeSyncHandler
+-utmHandler : UTMHandler
+}
+class "cannect::CanTsProtocol::BlockSession" as C_0007600237558335038312
+class C_0007600237558335038312 {
+__
++accepted : bool
++address : std::vector<uint8_t>
++blocks : std::vector<std::vector<uint8_t>>
++channel : uint8_t
++done : bool
++lastActivity : std::chrono::steady_clock::time_point
++numBlocks : uint8_t
++peer : uint8_t
++prepared : bool
+}
+class "cannect::CanTsProtocol::PendingTcTm" as C_0006251292972112856302
+class C_0006251292972112856302 {
+__
++channel : uint8_t
++data : uint8_t[8]
++dlc : uint8_t
++done : bool
++ok : bool
++peer : uint8_t
++waiting : bool
+}
+class "cannect::CanTsProtocol::PendingSetBlock" as C_0005846710086918852527
+class C_0005846710086918852527 {
+__
++active : bool
++bitmap : std::vector<uint8_t>
++channel : uint8_t
++done : bool
++numBlocks : uint8_t
++ok : bool
++peer : uint8_t
++reportReceived : bool
++requestAcked : bool
++waitingReport : bool
++waitingRequestAck : bool
+}
+class "cannect::CanTsProtocol::PendingGetBlock" as C_0009524187259179301383
+class C_0009524187259179301383 {
+__
++acked : bool
++blocks : std::vector<std::vector<uint8_t>>
++channel : uint8_t
++done : bool
++numBlocks : uint8_t
++ok : bool
++peer : uint8_t
++received : std::vector<bool>
++waitingAck : bool
++waitingTransfers : bool
+}
+class "cannect::CanTsProtocol::PeerState" as C_0003613762819545008769
+class C_0003613762819545008769 {
+__
++lastSeen : std::chrono::steady_clock::time_point
+}
+class "std::shared_ptr<cannect::ICanFrameTransmitter>" as C_0016502501971955977515
+class C_0016502501971955977515 {
+__
+}
+class "std::function<bool(uint8_t,uint8_t,uint8_t *)>" as C_0001911026257760431579
+class C_0001911026257760431579 {
+__
+}
+class "std::function<void(uint8_t,uint8_t,uint8_t *)>" as C_0007850955716031464853
+class C_0007850955716031464853 {
+__
+}
+class "std::function<void(uint8_t,uint8_t *)>" as C_0012902047375684769667
+class C_0012902047375684769667 {
+__
+}
+class "std::vector<uint8_t>" as C_0008792284403202452050
+class C_0008792284403202452050 {
+__
+}
+class "std::function<bool(uint8_t,uint8_t,std::vector<uint8_t> &)>" as C_0002508450115331039092
+class C_0002508450115331039092 {
+__
+}
+class "std::vector<bool>" as C_0002045887772729987855
+class C_0002045887772729987855 {
+__
+}
+class "std::unordered_map<uint8_t,cannect::CanTsProtocol::BlockSession>" as C_0015449933391148500410
+class C_0015449933391148500410 {
+__
+}
+class "std::unordered_map<uint8_t,cannect::CanTsProtocol::PeerState>" as C_0010639700143111548847
+class C_0010639700143111548847 {
+__
+}
+C_0001064302059056516755 ..> C_0014330891771787198846
+C_0001064302059056516755 ..> C_0000750293408759289947
+C_0013149467837282151620 ..> C_0016502501971955977515
+C_0013149467837282151620 ..> C_0001064302059056516755
+C_0013149467837282151620 ..> C_0000750293408759289947
+C_0009333316555939099127 ..> C_0014330891771787198846
+C_0009333316555939099127 ..> C_0000750293408759289947
+C_0009333316555939099127 ..> C_0010758754600654656942
+C_0009333316555939099127 ..> C_0002045887772729987855
+C_0009333316555939099127 o-- C_0001911026257760431579 : -tcHandler
+C_0009333316555939099127 o-- C_0001911026257760431579 : -tmHandler
+C_0009333316555939099127 o-- C_0007850955716031464853 : -utmHandler
+C_0009333316555939099127 o-- C_0012902047375684769667 : -tsHandler
+C_0009333316555939099127 o-- C_0002508450115331039092 : -setBlockHandler
+C_0009333316555939099127 o-- C_0002508450115331039092 : -getBlockHandler
+C_0009333316555939099127 o-- C_0015449933391148500410 : -sbSessions
+C_0009333316555939099127 o-- C_0015449933391148500410 : -gbSessions
+C_0009333316555939099127 o-- C_0010639700143111548847 : -peers
+C_0009333316555939099127 o-- C_0006251292972112856302 : -pendingTc
+C_0009333316555939099127 o-- C_0006251292972112856302 : -pendingTm
+C_0009333316555939099127 o-- C_0005846710086918852527 : -pendingSb
+C_0009333316555939099127 o-- C_0009524187259179301383 : -pendingGb
+C_0009333316555939099127 --> C_0001064302059056516755 : -transmitter
+C_0009333316555939099127 --> C_0016502501971955977515 : -transmitter
+C_0009333316555939099127 o-- C_0008792284403202452050 : -lastGetBlockData
+C_0013149467837282151620 <|-- C_0009333316555939099127
+C_0007600237558335038312 --+ C_0009333316555939099127
+C_0007600237558335038312 o-- C_0008792284403202452050 : +address
+C_0006251292972112856302 --+ C_0009333316555939099127
+C_0005846710086918852527 --+ C_0009333316555939099127
+C_0005846710086918852527 o-- C_0008792284403202452050 : +bitmap
+C_0009524187259179301383 --+ C_0009333316555939099127
+C_0009524187259179301383 o-- C_0002045887772729987855 : +received
+C_0003613762819545008769 --+ C_0009333316555939099127
+C_0016502501971955977515 ..> C_0001064302059056516755
+C_0002508450115331039092 ..> C_0008792284403202452050
+
+'Generated with clang-uml, version 0.6.2
+'LLVM version clang version 21.1.8
+@enduml

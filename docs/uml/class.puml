@@ -1,0 +1,583 @@
+@startuml
+package [cannect] as C_0004201263121548697268 {
+enum "Status" as C_0000750293408759289947
+enum C_0000750293408759289947 {
+SUCCESS
+UNSUCCESS
+INVALID_ARGUMENT
+INTERFACE_ALREADY_OPEN
+INTERFACE_INVALID_NAME
+}
+enum "FrameFormat" as C_0012828239846672840503
+enum C_0012828239846672840503 {
+Standard
+Extended
+}
+enum "FrameType" as C_0005651244349335981110
+enum C_0005651244349335981110 {
+Data
+Remote
+Error
+Overload
+}
+class "CanFrame" as C_0014330891771787198846
+class C_0014330891771787198846 {
+__
++data : uint8_t[8]
++dlc : uint8_t
++id : uint32_t
+}
+abstract "ICanFrameHandler" as C_0013777168133892942043
+abstract C_0013777168133892942043 {
++~ICanFrameHandler() = default : void
+..
+{abstract} +onFrame(const CanFrame & canFrame) = 0 : Status
+__
+}
+abstract "ICanFrameTransmitter" as C_0001064302059056516755
+abstract C_0001064302059056516755 {
++~ICanFrameTransmitter() = default : void
+..
+{abstract} +send(const CanFrame & canFrame) = 0 : Status
+__
+}
+abstract "ICanProtocol" as C_0013149467837282151620
+abstract C_0013149467837282151620 {
++~ICanProtocol() = default : void
+..
+{abstract} +setFrameTransmitter(std::shared_ptr<ICanFrameTransmitter> transmitter) = 0 : Status
+__
+}
+enum "CanTsMessageType" as C_0004790127550620467547
+enum C_0004790127550620467547 {
+TIMESYNC
+UNSOLICITED
+TELECOMMAND
+TELEMETRY
+SETBLOCK
+GETBLOCK
+}
+enum "CanTsReqAck" as C_0012971371872174036271
+enum C_0012971371872174036271 {
+REQ
+ACK
+NACK
+}
+enum "SetBlockFrameType" as C_0016107602312863286302
+enum C_0016107602312863286302 {
+REQUEST
+TRANSFER
+ACK
+ABORT
+NACK
+STATUS_REQUEST
+REPORT
+}
+enum "GetBlockFrameType" as C_0017619038414386083478
+enum C_0017619038414386083478 {
+REQUEST
+ACK
+ABORT
+NACK
+START
+TRANSFER
+}
+class "CanTsHeader" as C_0010758754600654656942
+class C_0010758754600654656942 {
+__
++command : uint16_t
++from : uint8_t
++to : uint8_t
++type : CanTsMessageType
+}
+class "CanTsProtocol" as C_0009333316555939099127
+class C_0009333316555939099127 {
++CanTsProtocol(uint8_t localAddress) : void
+..
+{static} -allBlocksReceived(const std::vector<bool> & received) : bool
+{static} -bitmapBitIsSet(const std::vector<uint8_t> & bitmap, uint8_t index) : bool
+{static} -bitmapSizeBytes(uint8_t numBlocks) : size_t
++broadcastTimeSync(const uint8_t * timeLE) : bool
++getBlock(uint8_t to, const std::vector<uint8_t> & addressLE, uint32_t timeoutMs = 200) : bool
++getLastGetBlockData(std::vector<uint8_t> & out) const : bool
++getLastTelemetry(uint8_t * out, uint8_t & dlc) const : bool
+-handleGetBlock(const CanTsHeader & h, const CanFrame & frame) : void
+-handleSetBlock(const CanTsHeader & h, const CanFrame & frame) : void
+-handleTelecommand(const CanTsHeader & h, const CanFrame & frame) : void
+-handleTelemetry(const CanTsHeader & h, const CanFrame & frame) : void
+-handleTimeSync(const CanTsHeader & h, const CanFrame & frame) : void
+-handleUnsolicited(const CanTsHeader & h, const CanFrame & frame) : void
++isPeerConnected(uint8_t peer, uint32_t timeoutMs) const : bool
+{static} -makeBitmap(const std::vector<bool> & received) : std::vector<uint8_t>
+-notePeerAlive(uint8_t peer) : void
++onFrame(const CanFrame & frame) : Status
++requestTelemetry(uint8_t to, uint8_t channel) : bool
+-sendFrame(const CanTsHeader & h, const uint8_t * data, uint8_t dlc) : bool
++sendKeepAlive(uint8_t channel, const uint8_t * data) : bool
++sendTelecommand(uint8_t to, uint8_t channel, const uint8_t * data) : bool
++sendUnsolicitedTelemetry(uint8_t to, uint8_t channel, const uint8_t * data) : bool
++setBlock(uint8_t to, const std::vector<uint8_t> & addressLE, const std::vector<uint8_t> & data, uint32_t timeoutMs = 200) : bool
++setFrameTransmitter(std::shared_ptr<ICanFrameTransmitter> transmitter) : Status
++setGetBlockHandler(GetBlockHandler handler) : void
++setSetBlockHandler(SetBlockHandler handler) : void
++setTelecommandHandler(TcHandler handler) : void
++setTelemetryHandler(TmHandler handler) : void
++setTimeSyncHandler(TimeSyncHandler handler) : void
++setUnsolicitedTelemetryHandler(UTMHandler handler) : void
+__
+-cv : std::condition_variable
+-gbSessions : std::unordered_map<uint8_t,BlockSession>
+-getBlockHandler : GetBlockHandler
+-lastGetBlockData : std::vector<uint8_t>
+-lastTelemetry : uint8_t[8]
+-lastTelemetryDlc : uint8_t
+-localAddress : uint8_t
+-mtx : std::mutex
+-peers : std::unordered_map<uint8_t,PeerState>
+-pendingGb : PendingGetBlock
+-pendingSb : PendingSetBlock
+-pendingTc : PendingTcTm
+-pendingTm : PendingTcTm
+-sbSessions : std::unordered_map<uint8_t,BlockSession>
+-setBlockHandler : SetBlockHandler
+-tcHandler : TcHandler
+-tmHandler : TmHandler
+-transmitter : std::shared_ptr<ICanFrameTransmitter>
+-tsHandler : TimeSyncHandler
+-utmHandler : UTMHandler
+}
+class "CanTsProtocol::BlockSession" as C_0007600237558335038312
+class C_0007600237558335038312 {
+__
++accepted : bool
++address : std::vector<uint8_t>
++blocks : std::vector<std::vector<uint8_t>>
++channel : uint8_t
++done : bool
++lastActivity : std::chrono::steady_clock::time_point
++numBlocks : uint8_t
++peer : uint8_t
++prepared : bool
+}
+class "CanTsProtocol::PendingTcTm" as C_0006251292972112856302
+class C_0006251292972112856302 {
+__
++channel : uint8_t
++data : uint8_t[8]
++dlc : uint8_t
++done : bool
++ok : bool
++peer : uint8_t
++waiting : bool
+}
+class "CanTsProtocol::PendingSetBlock" as C_0005846710086918852527
+class C_0005846710086918852527 {
+__
++active : bool
++bitmap : std::vector<uint8_t>
++channel : uint8_t
++done : bool
++numBlocks : uint8_t
++ok : bool
++peer : uint8_t
++reportReceived : bool
++requestAcked : bool
++waitingReport : bool
++waitingRequestAck : bool
+}
+class "CanTsProtocol::PendingGetBlock" as C_0009524187259179301383
+class C_0009524187259179301383 {
+__
++acked : bool
++blocks : std::vector<std::vector<uint8_t>>
++channel : uint8_t
++done : bool
++numBlocks : uint8_t
++ok : bool
++peer : uint8_t
++received : std::vector<bool>
++waitingAck : bool
++waitingTransfers : bool
+}
+class "CanTsProtocol::PeerState" as C_0003613762819545008769
+class C_0003613762819545008769 {
+__
++lastSeen : std::chrono::steady_clock::time_point
+}
+enum "CanInterfaceStatus" as C_0002653246633113768862
+enum C_0002653246633113768862 {
+Timeout
+NotOpen
+AlreadyOpen
+}
+abstract "ICanInterface" as C_0006089951896562383383
+abstract C_0006089951896562383383 {
++~ICanInterface() = default : void
+..
+{abstract} +close() = 0 : Status
+{abstract} +getName() = 0 : std::string
+{abstract} +isClosed() const = 0 : bool
+{abstract} +open() = 0 : Status
+{abstract} +receive(CanFrame & canFrame) = 0 : Status
+__
+}
+class "SocketCanInterface" as C_0008614033404614894874
+class C_0008614033404614894874 {
++SocketCanInterface(std::string name) : void
++~SocketCanInterface() : void
+..
++close() : Status
++getName() : std::string
++isClosed() const : bool
++open() : Status
++receive(CanFrame & canFrame) : Status
++send(const CanFrame & canFrame) : Status
+__
+-fd : int
+-isOpen : bool
+-name : std::string
+-pipeFds : int[2]
+}
+abstract "IFilter" as C_0009779356564632096396
+abstract C_0009779356564632096396 {
++~IFilter() = default : void
+..
+{abstract} +isValid(const CanFrame & frame) = 0 : bool
+__
+}
+class "CanDispatcher" as C_0009950696744101152848
+class C_0009950696744101152848 {
++CanDispatcher() = default : void
++~CanDispatcher() : void
+..
++addFilter(const std::string & interfaceName, std::shared_ptr<IFilter> filter) : Status
++addInterface(std::shared_ptr<ICanInterface> canInterface) : Status
++addReceiver(const std::string & interfaceName, std::shared_ptr<ICanFrameHandler> receiver) : Status
+-findEntry(const std::string & interfaceName) : DispatcherEntry *
+-runInterface(DispatcherEntry & entry) : void
++start() : void
++stop() : void
+__
+-dispatcherEntries : std::vector<DispatcherEntry>
+-entriesMutex : std::mutex
+-running : bool
+}
+class "CanDispatcher::DispatcherEntry" as C_0008914814402520425395
+class C_0008914814402520425395 {
+__
++canInterface : std::shared_ptr<ICanInterface>
++filters : std::vector<std::shared_ptr<IFilter>>
++ifaceThread : std::unique_ptr<std::thread>
++receivers : std::vector<std::shared_ptr<ICanFrameHandler>>
+}
+class "Cannect" as C_0009678354241052769692
+class C_0009678354241052769692 {
++Cannect() = default : void
++~Cannect() : void
+..
++addFilter(const std::string & interfaceName, std::shared_ptr<IFilter> filter) : Status
++addHandler(std::string name, std::shared_ptr<ICanFrameHandler> frameHandler) : Status
++addInterface(std::shared_ptr<ICanInterface> canInterface) : Status
++run() : Status
++start() : Status
++stop() : void
+__
+-dispatcher : CanDispatcher
+-running : bool
+}
+enum "LogLevel" as C_0003439763880887867982
+enum C_0003439763880887867982 {
+Debug
+Info
+Warning
+Error
+}
+abstract "ILogSink" as C_0012578514351129016165
+abstract C_0012578514351129016165 {
++~ILogSink() = default : void
+..
+{abstract} +log(LogLevel level, const std::string & message) = 0 : void
+__
+}
+class "ConsoleSink" as C_0006202248342187288758
+class C_0006202248342187288758 {
++log(LogLevel level, const std::string & message) : void
+__
+}
+class "FileSink" as C_0016928907618046152556
+class C_0016928907618046152556 {
++FileSink(const std::string & path) : void
+..
++log(LogLevel level, const std::string & message) : void
+__
+-file_ : std::ofstream
+}
+class "CallbackSink" as C_0016112702776452119486
+class C_0016112702776452119486 {
++CallbackSink(LogCallback cb) : void
+..
++log(LogLevel level, const std::string & message) : void
+__
+-cb_ : LogCallback
+}
+class "LogLocation" as C_0003435138973405170616
+class C_0003435138973405170616 {
+__
++file : const char *
++func : const char *
++line : int
+}
+class "Logger" as C_0016929445275597112994
+class C_0016929445275597112994 {
+#Logger() = default : void
++Logger(Logger &) = deleted : void
+..
++operator=(const Logger &) = deleted : void
+..
++addSink(std::shared_ptr<ILogSink> sink) : void
++debug(const std::string & msg) : void
++error(const std::string & msg) : void
++info(const std::string & msg) : void
+{static} +instance() : Logger *
++log(LogLevel level, const std::string & message, LogLocation loc) : void
++removeSinks() : void
++warning(const std::string & msg) : void
+__
+-mutex_ : std::mutex
+{static} #singleton : Logger *
+-sinks_ : std::vector<std::shared_ptr<ILogSink>>
+}
+}
+package [std] as C_0009971158671206323968 {
+class "shared_ptr<cannect::ICanFrameTransmitter>" as C_0016502501971955977515
+class C_0016502501971955977515 {
+__
+}
+package [chrono] as C_0010205447193874382122 {
+class "duration<int64_t,std::ratio<1,1000000000>>" as C_0017614144533568309161
+class C_0017614144533568309161 {
+__
+}
+class "time_point<std::chrono::steady_clock,std::chrono::duration<int64_t,std::ratio<1,1000000000>>>" as C_0016577378426764904006
+class C_0016577378426764904006 {
+__
+}
+}
+class "function<bool(uint8_t,uint8_t,uint8_t *)>" as C_0001911026257760431579
+class C_0001911026257760431579 {
+__
+}
+class "function<void(uint8_t,uint8_t,uint8_t *)>" as C_0007850955716031464853
+class C_0007850955716031464853 {
+__
+}
+class "function<void(uint8_t,uint8_t *)>" as C_0012902047375684769667
+class C_0012902047375684769667 {
+__
+}
+class "vector<uint8_t>" as C_0008792284403202452050
+class C_0008792284403202452050 {
+__
+}
+class "function<bool(uint8_t,uint8_t,std::vector<uint8_t> &)>" as C_0002508450115331039092
+class C_0002508450115331039092 {
+__
+}
+class "vector<bool>" as C_0002045887772729987855
+class C_0002045887772729987855 {
+__
+}
+class "unordered_map<uint8_t,cannect::CanTsProtocol::BlockSession>" as C_0015449933391148500410
+class C_0015449933391148500410 {
+__
+}
+class "unordered_map<uint8_t,cannect::CanTsProtocol::PeerState>" as C_0010639700143111548847
+class C_0010639700143111548847 {
+__
+}
+class "vector<std::vector<uint8_t>>" as C_0014345770883979309387
+class C_0014345770883979309387 {
+__
+}
+class "ratio<1,1000000000>" as C_0012415743977570969849
+class C_0012415743977570969849 {
+__
+}
+class "basic_string<char>" as C_0001275076681856179721
+class C_0001275076681856179721 {
+__
+}
+class "shared_ptr<cannect::ICanInterface>" as C_0003763256053408849504
+class C_0003763256053408849504 {
+__
+}
+class "shared_ptr<cannect::ICanFrameHandler>" as C_0007691982505931134022
+class C_0007691982505931134022 {
+__
+}
+class "shared_ptr<cannect::IFilter>" as C_0015816078886540271643
+class C_0015816078886540271643 {
+__
+}
+class "vector<cannect::CanDispatcher::DispatcherEntry>" as C_0010385015270235422842
+class C_0010385015270235422842 {
+__
+}
+class "vector<std::shared_ptr<cannect::IFilter>>" as C_0011846495077470978131
+class C_0011846495077470978131 {
+__
+}
+class "vector<std::shared_ptr<cannect::ICanFrameHandler>>" as C_0011652338223759311774
+class C_0011652338223759311774 {
+__
+}
+class "unique_ptr<std::thread>" as C_0016934191396453266261
+class C_0016934191396453266261 {
+__
+}
+class "basic_ofstream<char>" as C_0004276277466396066764
+class C_0004276277466396066764 {
+__
+}
+class "function<void(cannect::LogLevel,std::string const& const&)>" as C_0015399957808231707063
+class C_0015399957808231707063 {
+__
+}
+class "shared_ptr<cannect::ILogSink>" as C_0002128814613129908908
+class C_0002128814613129908908 {
+__
+}
+class "vector<std::shared_ptr<cannect::ILogSink>>" as C_0017237154822755599493
+class C_0017237154822755599493 {
+__
+}
+}
+class "EncoderDecoder" as C_0013765324754395460435
+class C_0013765324754395460435 {
+{static} +decode(uint32_t can_id) : CanTsHeader
+{static} +encode(const CanTsHeader & h) : uint32_t
+__
+{static} +CMD_MASK : const uint32_t
+{static} +CMD_SHIFT : const uint32_t
+{static} +FROM_MASK : const uint32_t
+{static} +FROM_SHIFT : const uint32_t
+{static} +TO_MASK : const uint32_t
+{static} +TO_SHIFT : const uint32_t
+{static} +TYPE_MASK : const uint32_t
+{static} +TYPE_SHIFT : const uint32_t
+}
+C_0013777168133892942043 ..> C_0014330891771787198846
+C_0013777168133892942043 ..> C_0000750293408759289947
+C_0001064302059056516755 ..> C_0014330891771787198846
+C_0001064302059056516755 ..> C_0000750293408759289947
+C_0013149467837282151620 ..> C_0016502501971955977515
+C_0013149467837282151620 ..> C_0001064302059056516755
+C_0013149467837282151620 ..> C_0000750293408759289947
+C_0013777168133892942043 <|-- C_0013149467837282151620
+C_0010758754600654656942 o-- C_0004790127550620467547 : +type
+C_0009333316555939099127 ..> C_0014330891771787198846
+C_0009333316555939099127 ..> C_0000750293408759289947
+C_0009333316555939099127 ..> C_0010758754600654656942
+C_0009333316555939099127 ..> C_0002045887772729987855
+C_0009333316555939099127 o-- C_0001911026257760431579 : -tcHandler
+C_0009333316555939099127 o-- C_0001911026257760431579 : -tmHandler
+C_0009333316555939099127 o-- C_0007850955716031464853 : -utmHandler
+C_0009333316555939099127 o-- C_0012902047375684769667 : -tsHandler
+C_0009333316555939099127 o-- C_0002508450115331039092 : -setBlockHandler
+C_0009333316555939099127 o-- C_0002508450115331039092 : -getBlockHandler
+C_0009333316555939099127 o-- C_0015449933391148500410 : -sbSessions
+C_0009333316555939099127 o-- C_0015449933391148500410 : -gbSessions
+C_0009333316555939099127 o-- C_0010639700143111548847 : -peers
+C_0009333316555939099127 o-- C_0006251292972112856302 : -pendingTc
+C_0009333316555939099127 o-- C_0006251292972112856302 : -pendingTm
+C_0009333316555939099127 o-- C_0005846710086918852527 : -pendingSb
+C_0009333316555939099127 o-- C_0009524187259179301383 : -pendingGb
+C_0009333316555939099127 --> C_0001064302059056516755 : -transmitter
+C_0009333316555939099127 --> C_0016502501971955977515 : -transmitter
+C_0009333316555939099127 o-- C_0008792284403202452050 : -lastGetBlockData
+C_0013149467837282151620 <|-- C_0009333316555939099127
+C_0007600237558335038312 --+ C_0009333316555939099127
+C_0007600237558335038312 o-- C_0008792284403202452050 : +address
+C_0007600237558335038312 o-- C_0014345770883979309387 : +blocks
+C_0007600237558335038312 o-- C_0016577378426764904006 : +lastActivity
+C_0006251292972112856302 --+ C_0009333316555939099127
+C_0005846710086918852527 --+ C_0009333316555939099127
+C_0005846710086918852527 o-- C_0008792284403202452050 : +bitmap
+C_0009524187259179301383 --+ C_0009333316555939099127
+C_0009524187259179301383 o-- C_0014345770883979309387 : +blocks
+C_0009524187259179301383 o-- C_0002045887772729987855 : +received
+C_0003613762819545008769 --+ C_0009333316555939099127
+C_0003613762819545008769 o-- C_0016577378426764904006 : +lastSeen
+C_0006089951896562383383 ..> C_0000750293408759289947
+C_0006089951896562383383 ..> C_0014330891771787198846
+C_0006089951896562383383 ..> C_0001275076681856179721
+C_0001064302059056516755 <|-- C_0006089951896562383383
+C_0008614033404614894874 ..> C_0000750293408759289947
+C_0008614033404614894874 ..> C_0014330891771787198846
+C_0008614033404614894874 o-- C_0001275076681856179721 : -name
+C_0006089951896562383383 <|-- C_0008614033404614894874
+C_0009779356564632096396 ..> C_0014330891771787198846
+C_0009950696744101152848 ..> C_0003763256053408849504
+C_0009950696744101152848 ..> C_0006089951896562383383
+C_0009950696744101152848 ..> C_0000750293408759289947
+C_0009950696744101152848 ..> C_0001275076681856179721
+C_0009950696744101152848 ..> C_0007691982505931134022
+C_0009950696744101152848 ..> C_0013777168133892942043
+C_0009950696744101152848 ..> C_0015816078886540271643
+C_0009950696744101152848 ..> C_0009779356564632096396
+C_0009950696744101152848 ..> C_0008914814402520425395
+C_0009950696744101152848 o-- C_0010385015270235422842 : -dispatcherEntries
+C_0008914814402520425395 --+ C_0009950696744101152848
+C_0008914814402520425395 --> C_0006089951896562383383 : +canInterface
+C_0008914814402520425395 --> C_0003763256053408849504 : +canInterface
+C_0008914814402520425395 o-- C_0011846495077470978131 : +filters
+C_0008914814402520425395 o-- C_0011652338223759311774 : +receivers
+C_0008914814402520425395 o-- C_0016934191396453266261 : +ifaceThread
+C_0009678354241052769692 ..> C_0003763256053408849504
+C_0009678354241052769692 ..> C_0006089951896562383383
+C_0009678354241052769692 ..> C_0000750293408759289947
+C_0009678354241052769692 ..> C_0001275076681856179721
+C_0009678354241052769692 ..> C_0007691982505931134022
+C_0009678354241052769692 ..> C_0013777168133892942043
+C_0009678354241052769692 ..> C_0015816078886540271643
+C_0009678354241052769692 ..> C_0009779356564632096396
+C_0009678354241052769692 o-- C_0009950696744101152848 : -dispatcher
+C_0012578514351129016165 ..> C_0003439763880887867982
+C_0012578514351129016165 ..> C_0001275076681856179721
+C_0006202248342187288758 ..> C_0003439763880887867982
+C_0006202248342187288758 ..> C_0001275076681856179721
+C_0012578514351129016165 <|-- C_0006202248342187288758
+C_0016928907618046152556 ..> C_0001275076681856179721
+C_0016928907618046152556 ..> C_0003439763880887867982
+C_0016928907618046152556 o-- C_0004276277466396066764 : -file_
+C_0012578514351129016165 <|-- C_0016928907618046152556
+C_0016112702776452119486 ..> C_0003439763880887867982
+C_0016112702776452119486 ..> C_0001275076681856179721
+C_0016112702776452119486 o-- C_0015399957808231707063 : -cb_
+C_0012578514351129016165 <|-- C_0016112702776452119486
+C_0016929445275597112994 ..> C_0002128814613129908908
+C_0016929445275597112994 ..> C_0012578514351129016165
+C_0016929445275597112994 ..> C_0003439763880887867982
+C_0016929445275597112994 ..> C_0001275076681856179721
+C_0016929445275597112994 ..> C_0003435138973405170616
+C_0016929445275597112994 o-- C_0017237154822755599493 : -sinks_
+C_0016929445275597112994 --> C_0016929445275597112994 : #singleton
+C_0016502501971955977515 ..> C_0001064302059056516755
+C_0017614144533568309161 ..> C_0012415743977570969849
+C_0016577378426764904006 ..> C_0017614144533568309161
+C_0002508450115331039092 ..> C_0008792284403202452050
+C_0014345770883979309387 ..> C_0008792284403202452050
+C_0003763256053408849504 ..> C_0006089951896562383383
+C_0007691982505931134022 ..> C_0013777168133892942043
+C_0015816078886540271643 ..> C_0009779356564632096396
+C_0011846495077470978131 ..> C_0015816078886540271643
+C_0011652338223759311774 ..> C_0007691982505931134022
+C_0015399957808231707063 ..> C_0003439763880887867982
+C_0015399957808231707063 ..> C_0001275076681856179721
+C_0002128814613129908908 ..> C_0012578514351129016165
+C_0017237154822755599493 ..> C_0002128814613129908908
+C_0013765324754395460435 ..> C_0010758754600654656942
+
+'Generated with clang-uml, version 0.6.2
+'LLVM version clang version 21.1.8
+@enduml

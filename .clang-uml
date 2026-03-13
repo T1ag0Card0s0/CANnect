@@ -1,0 +1,94 @@
+compilation_database_dir: build
+output_directory: docs/uml
+relative_to: .
+
+generate_method_arguments: none
+
+diagrams:
+  public_api:
+    type: class
+    glob:
+      - include/cannect/*.hpp
+      - src/*.cpp
+    include:
+      namespaces:
+        - cannect
+    exclude:
+      namespaces:
+        - std
+      access:
+        - private
+    generate_packages: true
+    package_type: directory
+    using_namespace:
+      - cannect
+    plantuml:
+      before:
+        - 'title CANnect - Public API'
+        - 'skinparam shadowing true'
+        - 'skinparam roundcorner 12'
+        - 'skinparam packageStyle rectangle'
+        - 'skinparam linetype ortho'
+        - 'skinparam ArrowThickness 1.5'
+        - 'skinparam ClassAttributeIconSize 0'
+        - 'hide empty members'
+
+  internal_architecture:
+    type: class
+    glob:
+      - src/*.cpp
+      - src/*.hpp
+      - include/cannect/*.hpp
+    exclude:
+      namespaces:
+        - std
+      access:
+        - private
+    generate_packages: true
+    package_type: directory
+    plantuml:
+      before:
+        - 'title CANnect - Internal Architecture'
+        - 'left to right direction'
+        - 'skinparam shadowing true'
+        - 'skinparam roundcorner 12'
+        - 'skinparam packageStyle rectangle'
+        - 'skinparam linetype ortho'
+        - 'skinparam ArrowThickness 1.5'
+        - 'skinparam ClassAttributeIconSize 0'
+        - 'hide empty members'
+
+  includes_overview:
+    type: include
+    glob:
+      - src/*.cpp
+      - src/*.hpp
+      - include/cannect/*.hpp
+    plantuml:
+      before:
+        - 'title CANnect - Include Graph'
+        - 'left to right direction'
+        - 'skinparam shadowing true'
+        - 'skinparam roundcorner 12'
+        - 'skinparam linetype ortho'
+
+  app_flow:
+    type: sequence
+    glob:
+      - src/main.cpp
+      - src/Cannect.cpp
+      - src/CanDispatcher.cpp
+      - src/CanTsProtocol.cpp
+      - src/SocketCanInterface.cpp
+      - src/Logger.cpp
+    exclude:
+      namespaces:
+        - std
+    start_from:
+      - function: "main()"
+    plantuml:
+      before:
+        - 'title CANnect - Application Flow'
+        - 'skinparam shadowing true'
+        - 'skinparam roundcorner 12'
+        - 'skinparam linetype ortho'
