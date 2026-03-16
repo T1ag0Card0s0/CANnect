@@ -63,13 +63,8 @@ void Cannect::stop()
     LOG_INFO("Cannect stopped");
 }
 
-Status Cannect::run()
+Status Cannect::waitSignal()
 {
-    if (Status s = start(); s != Status::SUCCESS)
-    {
-        return s;
-    }
-
     gRunning = true;
     signal(SIGINT, signalHandler);
     signal(SIGTERM, signalHandler);
