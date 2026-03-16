@@ -20,7 +20,7 @@ class Cannect
     Status addHandler(std::string name, std::shared_ptr<ICanFrameHandler> frameHandler);
     Status addFilter(const std::string &interfaceName, std::shared_ptr<IFilter> filter);
 
-    Status run();
+    Status waitSignal();
     Status start();
     void stop();
 

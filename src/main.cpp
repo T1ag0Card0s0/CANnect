@@ -4,13 +4,11 @@
 #include "cannect/LogSinks.hpp"
 #include "cannect/Logger.hpp"
 
-#include <chrono>
 #include <cstdint>
 #include <cstring>
 #include <iostream>
 #include <memory>
 #include <string>
-#include <thread>
 #include <vector>
 
 using namespace cannect;
@@ -57,6 +55,89 @@ static void printHexBytes(const uint8_t *data, size_t len)
 
 static void printHexBytes(const std::vector<uint8_t> &v) { printHexBytes(v.data(), v.size()); }
 
+static bool onTelecommand(uint8_t from, uint8_t ch, uint8_t data[CAN_FRAME_MAX_DATA])
+{
+    std::cout << "TELECOMMAND from node " << (int)from << " ch=" << (int)ch << " data=[ ";
+    printHexBytes(data, CAN_FRAME_MAX_DATA);
+    std::cout << " ]\n";
+    return true;
+}
+
+static bool onTelemetry(uint8_t from, uint8_t ch, uint8_t data[CAN_FRAME_MAX_DATA])
+{
+    std::cout << "TELEMETRY from node " << (int)from << " ch=" << (int)ch << " data=[ ";
+    printHexBytes(data, CAN_FRAME_MAX_DATA);
+    std::cout << " ]\n";
+    return true;
+}
+
+static void onUnsolicitedTelemetry(uint8_t from, uint8_t ch, uint8_t data[CAN_FRAME_MAX_DATA])
+{
+    std::cout << "UNSOLICITED from node " << (int)from << " ch=" << (int)ch << " data=[ ";
+    printHexBytes(data, CAN_FRAME_MAX_DATA);
+    std::cout << " ]\n";
+}
+
+static void onTimeSync(uint8_t from, uint8_t t[CAN_FRAME_MAX_DATA])
+{
+    std::cout << "TIMESYNC from node " << (int)from << " time=[ ";
+    printHexBytes(t, CAN_FRAME_MAX_DATA);
+    std::cout << " ]\n";
+}
+
+static bool onSetBlock(uint8_t from, uint8_t ch, std::vector<uint8_t> &data)
+{
+    std::cout << "SETBLOCK from node " << (int)from << " ch=" << (int)ch << " size=" << data.size() << " data=[ ";
+    printHexBytes(data);
+    std::cout << " ]\n";
+    return true;
+}
+
+static bool onGetBlock(uint8_t from, uint8_t ch, std::vector<uint8_t> &data)
+{
+    std::cout << "GETBLOCK from node " << (int)from << " ch=" << (int)ch << " size=" << data.size() << " data=[ ";
+    printHexBytes(data);
+    std::cout << " ]\n";
+    return true;
+}
+
+struct ArgCursor
+{
+    int argc;
+    char **argv;
+    int idx;
+    uint32_t timeoutMs = DEFAULT_TIMEOUT_MS;
+
+    uint8_t nextU8() { return u8(argv[idx++]); }
+
+    void readBytes(uint8_t *dst, int max)
+    {
+        for (int b = 0; b < max && idx < argc && argv[idx][0] != '-'; ++b)
+        {
+            dst[b] = u8(argv[idx++]);
+        }
+    }
+
+    std::vector<uint8_t> readVec()
+    {
+        std::vector<uint8_t> v;
+        while (idx < argc && std::strcmp(argv[idx], "--timeout") != 0)
+        {
+            v.push_back(u8(argv[idx++]));
+        }
+        return v;
+    }
+
+    void consumeTimeout()
+    {
+        if (idx + 1 < argc && std::strcmp(argv[idx], "--timeout") == 0)
+        {
+            ++idx;
+            timeoutMs = u32(argv[idx++]);
+        }
+    }
+};
+
 static void runSend(CanTsProtocol &proto, int argc, char *argv[], int idx)
 {
     if (idx >= argc)
@@ -65,39 +146,14 @@ static void runSend(CanTsProtocol &proto, int argc, char *argv[], int idx)
         return;
     }
 
-    const std::string cmd = argv[idx++];
-    uint32_t timeoutMs = DEFAULT_TIMEOUT_MS;
-
-    auto readBytes = [&](uint8_t *dst, int max) {
-        for (int b = 0; b < max && idx < argc && argv[idx][0] != '-'; ++b)
-        {
-            dst[b] = u8(argv[idx++]);
-        }
-    };
-
-    auto readVec = [&]() {
-        std::vector<uint8_t> v;
-        while (idx < argc && std::strcmp(argv[idx], "--timeout") != 0)
-        {
-            v.push_back(u8(argv[idx++]));
-        }
-        return v;
-    };
-
-    auto consumeTimeout = [&]() {
-        if (idx + 1 < argc && std::strcmp(argv[idx], "--timeout") == 0)
-        {
-            ++idx;
-            timeoutMs = u32(argv[idx++]);
-        }
-    };
-
+    ArgCursor cur{argc, argv, idx};
+    const std::string cmd = cur.argv[cur.idx++];
     bool ok = false;
 
     if (cmd == "telecommand")
     {
-        uint8_t to = u8(argv[idx++]), ch = u8(argv[idx++]), data[CAN_FRAME_MAX_DATA]{};
-        readBytes(data, CAN_FRAME_MAX_DATA);
+        uint8_t to = cur.nextU8(), ch = cur.nextU8(), data[CAN_FRAME_MAX_DATA]{};
+        cur.readBytes(data, CAN_FRAME_MAX_DATA);
         ok = proto.sendTelecommand(to, ch, data);
         std::cout << "TELECOMMAND -> node " << (int)to << " ch=" << (int)ch << " data=[ ";
         printHexBytes(data, CAN_FRAME_MAX_DATA);
@@ -105,7 +161,7 @@ static void runSend(CanTsProtocol &proto, int argc, char *argv[], int idx)
     }
     else if (cmd == "telemetry")
     {
-        uint8_t to = u8(argv[idx++]), ch = u8(argv[idx++]);
+        uint8_t to = cur.nextU8(), ch = cur.nextU8();
         ok = proto.requestTelemetry(to, ch);
         std::cout << "TELEMETRY REQUEST -> node " << (int)to << " ch=" << (int)ch << " : " << (ok ? "OK" : "FAIL")
                   << "\n";
@@ -122,8 +178,8 @@ static void runSend(CanTsProtocol &proto, int argc, char *argv[], int idx)
     }
     else if (cmd == "unsolicited")
     {
-        uint8_t to = u8(argv[idx++]), ch = u8(argv[idx++]), data[CAN_FRAME_MAX_DATA]{};
-        readBytes(data, CAN_FRAME_MAX_DATA);
+        uint8_t to = cur.nextU8(), ch = cur.nextU8(), data[CAN_FRAME_MAX_DATA]{};
+        cur.readBytes(data, CAN_FRAME_MAX_DATA);
         ok = proto.sendUnsolicitedTelemetry(to, ch, data);
         std::cout << "UNSOLICITED TELEMETRY -> node " << (int)to << " ch=" << (int)ch << " data=[ ";
         printHexBytes(data, CAN_FRAME_MAX_DATA);
@@ -132,7 +188,7 @@ static void runSend(CanTsProtocol &proto, int argc, char *argv[], int idx)
     else if (cmd == "timesync")
     {
         uint8_t data[CAN_FRAME_MAX_DATA]{};
-        readBytes(data, CAN_FRAME_MAX_DATA);
+        cur.readBytes(data, CAN_FRAME_MAX_DATA);
         ok = proto.broadcastTimeSync(data);
         std::cout << "TIMESYNC broadcast data=[ ";
         printHexBytes(data, CAN_FRAME_MAX_DATA);
@@ -140,39 +196,39 @@ static void runSend(CanTsProtocol &proto, int argc, char *argv[], int idx)
     }
     else if (cmd == "setblock")
     {
-        uint8_t to = u8(argv[idx++]);
+        uint8_t to = cur.nextU8();
         std::vector<uint8_t> addr(4);
         for (auto &b : addr)
         {
-            b = u8(argv[idx++]);
+            b = cur.nextU8();
         }
-        auto data = readVec();
-        consumeTimeout();
+        auto data = cur.readVec();
+        cur.consumeTimeout();
         std::cout << "SETBLOCK -> node " << (int)to << " addr=0x";
         for (int i = (int)addr.size() - 1; i >= 0; --i)
         {
             std::cout << std::hex << (int)addr[i];
         }
         std::cout << std::dec << " size=" << data.size() << " ...\n";
-        ok = proto.setBlock(to, addr, data, timeoutMs);
+        ok = proto.setBlock(to, addr, data, cur.timeoutMs);
         std::cout << "SETBLOCK : " << (ok ? "OK" : "FAIL") << "\n";
     }
     else if (cmd == "getblock")
     {
-        uint8_t to = u8(argv[idx++]);
+        uint8_t to = cur.nextU8();
         std::vector<uint8_t> addr(4);
         for (auto &b : addr)
         {
-            b = u8(argv[idx++]);
+            b = cur.nextU8();
         }
-        consumeTimeout();
+        cur.consumeTimeout();
         std::cout << "GETBLOCK -> node " << (int)to << " addr=0x";
         for (int i = (int)addr.size() - 1; i >= 0; --i)
         {
             std::cout << std::hex << (int)addr[i];
         }
         std::cout << std::dec << " ...\n";
-        ok = proto.getBlock(to, addr, timeoutMs);
+        ok = proto.getBlock(to, addr, cur.timeoutMs);
         std::cout << "GETBLOCK : " << (ok ? "OK" : "FAIL") << "\n";
         if (ok)
         {
@@ -187,8 +243,8 @@ static void runSend(CanTsProtocol &proto, int argc, char *argv[], int idx)
     }
     else if (cmd == "keepalive")
     {
-        uint8_t ch = u8(argv[idx++]), data[CAN_FRAME_MAX_DATA]{};
-        readBytes(data, CAN_FRAME_MAX_DATA);
+        uint8_t ch = cur.nextU8(), data[CAN_FRAME_MAX_DATA]{};
+        cur.readBytes(data, CAN_FRAME_MAX_DATA);
         ok = proto.sendKeepAlive(ch, data);
         std::cout << "KEEPALIVE ch=" << (int)ch << " data=[ ";
         printHexBytes(data, CAN_FRAME_MAX_DATA);
@@ -272,40 +328,12 @@ int main(int argc, char *argv[])
     Cannect app;
     auto proto = std::make_shared<CanTsProtocol>(localNode);
 
-    proto->setTelecommandHandler([](uint8_t from, uint8_t ch, uint8_t data[CAN_FRAME_MAX_DATA]) {
-        std::cout << "TELECOMMAND from node " << (int)from << " ch=" << (int)ch << " data=[ ";
-        printHexBytes(data, CAN_FRAME_MAX_DATA);
-        std::cout << " ]\n";
-        return true;
-    });
-    proto->setTelemetryHandler([](uint8_t from, uint8_t ch, uint8_t data[CAN_FRAME_MAX_DATA]) {
-        std::cout << "TELEMETRY from node " << (int)from << " ch=" << (int)ch << " data=[ ";
-        printHexBytes(data, CAN_FRAME_MAX_DATA);
-        std::cout << " ]\n";
-        return true;
-    });
-    proto->setUnsolicitedTelemetryHandler([](uint8_t from, uint8_t ch, uint8_t data[CAN_FRAME_MAX_DATA]) {
-        std::cout << "UNSOLICITED from node " << (int)from << " ch=" << (int)ch << " data=[ ";
-        printHexBytes(data, CAN_FRAME_MAX_DATA);
-        std::cout << " ]\n";
-    });
-    proto->setTimeSyncHandler([](uint8_t from, uint8_t t[CAN_FRAME_MAX_DATA]) {
-        std::cout << "TIMESYNC from node " << (int)from << " time=[ ";
-        printHexBytes(t, CAN_FRAME_MAX_DATA);
-        std::cout << " ]\n";
-    });
-    proto->setSetBlockHandler([](uint8_t from, uint8_t ch, std::vector<uint8_t> &data) {
-        std::cout << "SETBLOCK from node " << (int)from << " ch=" << (int)ch << " size=" << data.size() << " data=[ ";
-        printHexBytes(data);
-        std::cout << " ]\n";
-        return true;
-    });
-    proto->setGetBlockHandler([](uint8_t from, uint8_t ch, std::vector<uint8_t> &data) {
-        std::cout << "GETBLOCK from node " << (int)from << " ch=" << (int)ch << " size=" << data.size() << " data=[ ";
-        printHexBytes(data);
-        std::cout << " ]\n";
-        return true;
-    });
+    proto->setTelecommandHandler(onTelecommand);
+    proto->setTelemetryHandler(onTelemetry);
+    proto->setUnsolicitedTelemetryHandler(onUnsolicitedTelemetry);
+    proto->setTimeSyncHandler(onTimeSync);
+    proto->setSetBlockHandler(onSetBlock);
+    proto->setGetBlockHandler(onGetBlock);
 
     proto->setFrameTransmitter(iface);
 
@@ -320,18 +348,17 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    app.start();
     if (sendIdx >= 0)
     {
-        std::thread([&, sendIdx] {
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
-            runSend(*proto, argc, argv, sendIdx);
-        }).detach();
+        runSend(*proto, argc, argv, sendIdx);
     }
     else
     {
         std::cout << "CANnect listening on " << iface->getName() << " as node " << (int)localNode << "\n";
     }
 
-    app.run();
+    app.waitSignal();
+    app.stop();
     return 0;
 }

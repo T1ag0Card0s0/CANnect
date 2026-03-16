@@ -222,6 +222,53 @@ app.addFilter("vcan0", std::make_shared<CustomFilter>());
 
 Set via `LOG_LEVEL` compile-time macro.
 
+# Usage
+ 
+## Running the CLI
+ 
+Build the project with `make`, then invoke the binary with an interface and an optional send command.
+ 
+```
+cannect -i <type:config> [--node <addr>] [--output <file>] [--send <command> ...]
+```
+ 
+| Flag | Description |
+|------|-------------|
+| `-i`, `--iface` | CAN interface, e.g. `socketcan:vcan0` |
+| `-n`, `--node` | Local node address (default: 65) |
+| `-o`, `--output` | Write log to file in addition to console |
+| `-s`, `--send` | Send a command then stay open until Ctrl+C |
+ 
+---
+ 
+## Listen mode
+ 
+Omit `--send` to just receive frames. All incoming messages are printed to stdout.
+ 
+```bash
+cannect -i socketcan:vcan0
+cannect -i socketcan:vcan0 --node 10 --output run.log
+```
+ 
+## Timeouts
+ 
+`setblock` and `getblock` accept an optional `--timeout <ms>` at the end of the command.
+The default is defined by `DEFAULT_TIMEOUT_MS` at compile time.
+ 
+```bash
+cannect -i socketcan:vcan0 --send getblock 10 0x00 0x10 0x00 0x00 --timeout 5000
+```
+ 
+## Numeric formats
+ 
+All byte and address arguments accept decimal, hex (`0x`-prefixed), or octal (`0`-prefixed) values,
+parsed via `stoul(..., 0)`. The following are all equivalent:
+ 
+```bash
+--send telecommand 10 1 222 173 190 239 0 0 0 0   # decimal
+--send telecommand 10 1 0xDE 0xAD 0xBE 0xEF 0 0 0 0   # hex
+```
+
 ## Future Enhancements
 
 Potential improvements for future versions:
