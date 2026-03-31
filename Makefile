@@ -14,7 +14,7 @@ CXXFLAGS := -std=c++17 -O2 -MMD -MP -Wall -Wextra -Wpedantic -Werror -Iinclude -
 
 TARGET = $(BUILD_DIR)/$(PROJECT_NAME)
 
-LIB_OBJS := $(OBJS_DIR)/CanDispatcher.o $(OBJS_DIR)/Logger.o $(OBJS_DIR)/SocketCanInterface.o $(OBJS_DIR)/Cannect.o $(OBJS_DIR)/CanTsProtocol.o
+LIB_OBJS := $(OBJS_DIR)/CanDispatcher.o $(OBJS_DIR)/Logger.o $(OBJS_DIR)/SocketCanInterface.o $(OBJS_DIR)/Cannect.o $(OBJS_DIR)/CanTsProtocol.o $(OBJS_DIR)/SetBlockManager.o $(OBJS_DIR)/GetBlockManager.o
 MAIN_OBJ := $(OBJS_DIR)/main.o 
 all: $(TARGET)
 
