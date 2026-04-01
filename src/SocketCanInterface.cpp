@@ -1,4 +1,4 @@
-#include "SocketCanInterface.hpp"
+#include "cannect/SocketCanInterface.hpp"
 
 #include "cannect/Logger.hpp"
 #include "cannect/Status.hpp"
