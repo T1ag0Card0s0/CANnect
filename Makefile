@@ -10,12 +10,20 @@ RELEASE_PKG = $(BUILD_DIR)/$(RELEASE_NAME).tar.gz
 
 CXX := g++
 # Log level 0=Debug ... 4=Off
-CXXFLAGS := -std=c++17 -O2 -MMD -MP -Wall -Wextra -Wpedantic -Werror -Iinclude -DLOG_LEVEL=3 -static
+CXXFLAGS := -std=c++17 -O2 -MMD -MP -Wall -Wextra -Wpedantic -Werror -Iinclude -DLOG_LEVEL=3
 
 TARGET = $(BUILD_DIR)/$(PROJECT_NAME)
 
-LIB_OBJS := $(OBJS_DIR)/CanDispatcher.o $(OBJS_DIR)/Logger.o $(OBJS_DIR)/SocketCanInterface.o $(OBJS_DIR)/Cannect.o $(OBJS_DIR)/CanTsProtocol.o $(OBJS_DIR)/SetBlockManager.o $(OBJS_DIR)/GetBlockManager.o
-MAIN_OBJ := $(OBJS_DIR)/main.o 
+LIB_OBJS := $(OBJS_DIR)/CanDispatcher.o \
+	$(OBJS_DIR)/Logger.o \
+	$(OBJS_DIR)/SocketCanInterface.o \
+	$(OBJS_DIR)/Cannect.o \
+	$(OBJS_DIR)/cants/CanTsProtocol.o \
+	$(OBJS_DIR)/cants/SetBlockManager.o \
+	$(OBJS_DIR)/cants/GetBlockManager.o
+
+MAIN_OBJ := $(OBJS_DIR)/main.o
+
 all: $(TARGET)
 
 $(LIB): $(LIB_OBJS) | $(LIB_DIR)
@@ -24,21 +32,22 @@ $(LIB): $(LIB_OBJS) | $(LIB_DIR)
 $(TARGET): $(MAIN_OBJ) $(LIB) | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(OBJS_DIR)/%.o: src/%.cpp | $(OBJS_DIR)
+$(OBJS_DIR)/%.o: src/%.cpp
+	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BUILD_DIR) $(OBJS_DIR) $(LIB_DIR) $(RELEASE_DIR):
-	mkdir -p $@
+	@mkdir -p $@
 
--include $(wildcard $(OBJS_DIR)/*.d)
+-include $(LIB_OBJS:.o=.d) $(MAIN_OBJ:.o=.d)
 
 release: $(RELEASE_PKG)
 	@echo "Release package ready: $(RELEASE_PKG)"
- 
+
 $(RELEASE_PKG): $(LIB) | $(RELEASE_DIR)
 	@echo "Staging release $(RELEASE_NAME)..."
 	$(RM) -rf $(RELEASE_DIR)/$(RELEASE_NAME)
-	mkdir -p $(RELEASE_DIR)/$(RELEASE_NAME)/lib
+	@mkdir -p $(RELEASE_DIR)/$(RELEASE_NAME)/lib
 	cp -r include $(RELEASE_DIR)/$(RELEASE_NAME)/include
 	cp $(LIB) $(RELEASE_DIR)/$(RELEASE_NAME)/lib/
 	cp LICENSE $(RELEASE_DIR)/$(RELEASE_NAME)/LICENSE
@@ -55,5 +64,4 @@ test: all
 export LIB
 export PROJECT_NAME
 
-.PHONY: all clean test
-
+.PHONY: all clean test release

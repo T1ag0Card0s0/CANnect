@@ -1,5 +1,6 @@
-#include "CanTsProtocol.hpp"
+#include "cannect/cants/CanTsProtocol.hpp"
 
+#include "CanTsCodec.hpp"
 #include "cannect/Logger.hpp"
 #include "cannect/Types.hpp"
 
@@ -10,8 +11,10 @@ using C = CanTsCodec;
 
 CanTsProtocol::CanTsProtocol(uint8_t localAddress)
     : localAddress(localAddress),
-      setBlockMgr(localAddress, [this](const CanTsHeader &h, const uint8_t *d, uint8_t dlc) { return sendFrame(h, d, dlc); }),
-      getBlockMgr(localAddress, [this](const CanTsHeader &h, const uint8_t *d, uint8_t dlc) { return sendFrame(h, d, dlc); })
+      setBlockMgr(localAddress,
+                  [this](const CanTsHeader &h, const uint8_t *d, uint8_t dlc) { return sendFrame(h, d, dlc); }),
+      getBlockMgr(localAddress,
+                  [this](const CanTsHeader &h, const uint8_t *d, uint8_t dlc) { return sendFrame(h, d, dlc); })
 {
 }
 
@@ -46,15 +49,9 @@ void CanTsProtocol::setTimeSyncHandler(TimeSyncHandler handler)
     tsHandler = std::move(handler);
 }
 
-void CanTsProtocol::setGetBlockHandler(GetBlockHandler handler)
-{
-    getBlockMgr.setHandler(std::move(handler));
-}
+void CanTsProtocol::setGetBlockHandler(GetBlockHandler handler) { getBlockMgr.setHandler(std::move(handler)); }
 
-void CanTsProtocol::setSetBlockHandler(SetBlockHandler handler)
-{
-    setBlockMgr.setHandler(std::move(handler));
-}
+void CanTsProtocol::setSetBlockHandler(SetBlockHandler handler) { setBlockMgr.setHandler(std::move(handler)); }
 
 bool CanTsProtocol::sendFrame(const CanTsHeader &h, const uint8_t *data, uint8_t dlc)
 {
@@ -356,10 +353,7 @@ bool CanTsProtocol::getLastTelemetry(uint8_t out[CAN_FRAME_MAX_DATA], uint8_t &d
     return true;
 }
 
-bool CanTsProtocol::getLastGetBlockData(std::vector<uint8_t> &out) const
-{
-    return getBlockMgr.getLastData(out);
-}
+bool CanTsProtocol::getLastGetBlockData(std::vector<uint8_t> &out) const { return getBlockMgr.getLastData(out); }
 
 bool CanTsProtocol::isPeerConnected(uint8_t peer, uint32_t timeoutMs) const
 {

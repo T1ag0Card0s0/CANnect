@@ -1,6 +1,5 @@
 #pragma once
 
-#include "CanTsCodec.hpp"
 #include "GetBlockManager.hpp"
 #include "SetBlockManager.hpp"
 #include "cannect/ICanProtocol.hpp"

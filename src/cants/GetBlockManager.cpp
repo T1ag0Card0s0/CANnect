@@ -1,5 +1,6 @@
-#include "GetBlockManager.hpp"
+#include "cannect/cants/GetBlockManager.hpp"
 
+#include "CanTsCodec.hpp"
 #include "cannect/Logger.hpp"
 
 #include <algorithm>
@@ -233,7 +234,8 @@ bool GetBlockManager::getBlock(uint8_t to, const std::vector<uint8_t> &addressLE
     req.type = CanTsMessageType::GETBLOCK;
     req.command = C::makeGetBlockCommand(GetBlockFrameType::REQUEST, static_cast<uint8_t>(numBlocks - 1u));
 
-    if (!frameSender(req, addressLE.data(), static_cast<uint8_t>(std::min<size_t>(addressLE.size(), CAN_FRAME_MAX_DATA))))
+    if (!frameSender(req, addressLE.data(),
+                     static_cast<uint8_t>(std::min<size_t>(addressLE.size(), CAN_FRAME_MAX_DATA))))
     {
         std::lock_guard<std::mutex> lock(mtx);
         pending = {};

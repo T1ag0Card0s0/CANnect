@@ -1,7 +1,7 @@
 #pragma once
 
-#include "CanTsCodec.hpp"
 #include "cannect/Types.hpp"
+#include "cannect/cants/Types.hpp"
 
 #include <chrono>
 #include <condition_variable>
@@ -14,18 +14,18 @@
 namespace cannect
 {
 
-class GetBlockManager
+class SetBlockManager
 {
   public:
     using FrameSender = std::function<bool(const CanTsHeader &, const uint8_t *, uint8_t)>;
-    using Handler = std::function<bool(uint8_t from, uint8_t channel, std::vector<uint8_t> &response)>;
+    using Handler = std::function<bool(uint8_t from, uint8_t channel, std::vector<uint8_t> &request)>;
 
-    GetBlockManager(uint8_t localAddress, FrameSender sender);
+    SetBlockManager(uint8_t localAddress, FrameSender sender);
 
     void setHandler(Handler h);
     void onFrame(const CanTsHeader &h, const CanFrame &frame);
-    bool getBlock(uint8_t to, const std::vector<uint8_t> &addressLE, uint32_t timeoutMs);
-    bool getLastData(std::vector<uint8_t> &out) const;
+    bool setBlock(uint8_t to, const std::vector<uint8_t> &addressLE, const std::vector<uint8_t> &data,
+                  uint32_t timeoutMs);
 
   private:
     struct Session
@@ -37,33 +37,34 @@ class GetBlockManager
         std::vector<std::vector<uint8_t>> blocks;
         std::chrono::steady_clock::time_point lastActivity{};
         bool prepared = false;
+        bool done = false;
         bool accepted = false;
     };
 
     struct PendingState
     {
-        bool waitingAck = false;
-        bool acked = false;
-        bool waitingTransfers = false;
+        bool active = false;
+        bool waitingRequestAck = false;
+        bool requestAcked = false;
+        bool waitingReport = false;
+        bool reportReceived = false;
         bool done = false;
         bool ok = false;
         uint8_t peer = 0;
         uint8_t channel = 0;
         uint8_t numBlocks = 0;
-        std::vector<std::vector<uint8_t>> blocks;
-        std::vector<bool> received;
+        std::vector<uint8_t> bitmap;
     };
 
     uint8_t localAddress;
     FrameSender frameSender;
     Handler handler;
 
-    mutable std::mutex mtx;
+    std::mutex mtx;
     std::condition_variable cv;
 
     std::unordered_map<uint8_t, Session> sessions;
     PendingState pending;
-    std::vector<uint8_t> lastData;
 };
 
 } // namespace cannect

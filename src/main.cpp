@@ -1,8 +1,8 @@
-#include "CanTsProtocol.hpp"
 #include "SocketCanInterface.hpp"
 #include "cannect/Cannect.hpp"
 #include "cannect/LogSinks.hpp"
 #include "cannect/Logger.hpp"
+#include "cannect/cants/CanTsProtocol.hpp"
 
 #include <cstdint>
 #include <cstring>

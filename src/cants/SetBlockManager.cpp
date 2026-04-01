@@ -1,5 +1,6 @@
-#include "SetBlockManager.hpp"
+#include "cannect/cants/SetBlockManager.hpp"
 
+#include "CanTsCodec.hpp"
 #include "cannect/Logger.hpp"
 
 #include <algorithm>
@@ -53,8 +54,8 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
         resp.to = h.from;
         resp.from = localAddress;
         resp.type = CanTsMessageType::SETBLOCK;
-        resp.command =
-            C::makeSetBlockCommand(accepted ? SetBlockFrameType::ACK : SetBlockFrameType::NACK, C::ackCommandLow7(h.command));
+        resp.command = C::makeSetBlockCommand(accepted ? SetBlockFrameType::ACK : SetBlockFrameType::NACK,
+                                              C::ackCommandLow7(h.command));
 
         (void)frameSender(resp, frame.data, frame.dlc);
         break;
@@ -79,8 +80,8 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
         resp.to = h.from;
         resp.from = localAddress;
         resp.type = CanTsMessageType::SETBLOCK;
-        resp.command =
-            C::makeSetBlockCommand(accept ? SetBlockFrameType::ACK : SetBlockFrameType::NACK, C::ackCommandLow7(h.command));
+        resp.command = C::makeSetBlockCommand(accept ? SetBlockFrameType::ACK : SetBlockFrameType::NACK,
+                                              C::ackCommandLow7(h.command));
 
         (void)frameSender(resp, frame.data, frame.dlc);
         break;
@@ -177,7 +178,8 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
         report.to = h.from;
         report.from = localAddress;
         report.type = CanTsMessageType::SETBLOCK;
-        report.command = C::makeSetBlockReportCommand(static_cast<uint8_t>(bitmap.size() & C::BLOCK_LOW6_MASK), handlerDone);
+        report.command =
+            C::makeSetBlockReportCommand(static_cast<uint8_t>(bitmap.size() & C::BLOCK_LOW6_MASK), handlerDone);
 
         const uint8_t dlc = static_cast<uint8_t>(std::min<size_t>(bitmap.size(), CAN_FRAME_MAX_DATA));
         (void)frameSender(report, bitmap.data(), dlc);
@@ -282,7 +284,8 @@ bool SetBlockManager::setBlock(uint8_t to, const std::vector<uint8_t> &addressLE
     req.type = CanTsMessageType::SETBLOCK;
     req.command = C::makeSetBlockCommand(SetBlockFrameType::REQUEST, static_cast<uint8_t>(numBlocks - 1u));
 
-    if (!frameSender(req, addressLE.data(), static_cast<uint8_t>(std::min<size_t>(addressLE.size(), CAN_FRAME_MAX_DATA))))
+    if (!frameSender(req, addressLE.data(),
+                     static_cast<uint8_t>(std::min<size_t>(addressLE.size(), CAN_FRAME_MAX_DATA))))
     {
         std::lock_guard<std::mutex> lock(mtx);
         pending = {};
