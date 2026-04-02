@@ -29,16 +29,19 @@ LIB_OBJS := \
 	$(OBJS_DIR)/cants/SetBlockManager.o \
 	$(OBJS_DIR)/cants/GetBlockManager.o
 
-MAIN_OBJ := $(OBJS_DIR)/main.o
+APP_OBJS := \
+	$(OBJS_DIR)/app/main.o \
+	$(OBJS_DIR)/app/Cli.o \
+	$(OBJS_DIR)/app/Handlers.o
 
-DEPS := $(LIB_OBJS:.o=.d) $(MAIN_OBJ:.o=.d)
+DEPS := $(LIB_OBJS:.o=.d) $(APP_OBJS:.o=.d)
 
 all: $(TARGET)
 
 $(LIB): $(LIB_OBJS) | $(LIB_DIR)
 	$(AR) rcs $@ $^
 
-$(TARGET): $(MAIN_OBJ) $(LIB) | $(BUILD_DIR)
+$(TARGET): $(APP_OBJS) $(LIB) | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 $(OBJS_DIR)/%.o: src/%.cpp | $(OBJS_DIR)
@@ -58,11 +61,16 @@ $(RELEASE_PKG): $(LIB) | $(RELEASE_DIR)
 	$(RM) $(RELEASE_PKG)
 	rm -rf $(RELEASE_ROOT)
 	mkdir -p $(RELEASE_ROOT)/lib
-	mkdir -p $(RELEASE_ROOT)/demo
+	mkdir -p $(RELEASE_ROOT)/demo/app
+	mkdir -p $(RELEASE_ROOT)/include/cannect/app
 
 	cp -r include $(RELEASE_ROOT)/
 	cp $(LIB) $(RELEASE_ROOT)/lib/
-	cp src/main.cpp $(RELEASE_ROOT)/demo/
+	cp src/app/main.cpp $(RELEASE_ROOT)/demo/app/
+	cp src/app/Cli.cpp $(RELEASE_ROOT)/demo/app/
+	cp src/app/Handlers.cpp $(RELEASE_ROOT)/demo/app/
+	cp src/app/Cli.hpp $(RELEASE_ROOT)/demo/app/
+	cp src/app/Handlers.hpp $(RELEASE_ROOT)/demo/app/
 	cp LICENSE $(RELEASE_ROOT)/LICENSE
 	cp README.md $(RELEASE_ROOT)/README.md
 
@@ -71,7 +79,7 @@ $(RELEASE_PKG): $(LIB) | $(RELEASE_DIR)
 		'CXXFLAGS ?= -std=c++17 -O2 -I../include' \
 		'' \
 		'TARGET = demo' \
-		'SRC = main.cpp' \
+		'SRC = app/main.cpp app/Cli.cpp app/Handlers.cpp' \
 		'LIB = ../lib/lib$(PROJECT_NAME).a' \
 		'' \
 		'all: $$(TARGET)' \
