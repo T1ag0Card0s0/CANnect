@@ -62,7 +62,7 @@ $(RELEASE_PKG): $(LIB) | $(RELEASE_DIR)
 	rm -rf $(RELEASE_ROOT)
 	mkdir -p $(RELEASE_ROOT)/lib
 	mkdir -p $(RELEASE_ROOT)/demo/app
-	mkdir -p $(RELEASE_ROOT)/include/cannect/app
+	mkdir -p $(RELEASE_ROOT)/include/cannect
 
 	cp -r include $(RELEASE_ROOT)/
 	cp $(LIB) $(RELEASE_ROOT)/lib/
@@ -98,9 +98,13 @@ $(RELEASE_PKG): $(LIB) | $(RELEASE_DIR)
 
 clean:
 	rm -rf $(BUILD_DIR)
+	$(MAKE) -C tests clean
 
-test: all
+test:
 	$(MAKE) -C tests run
+
+coverage:
+	$(MAKE) -C tests coverage_html
 
 export LIB
 export PROJECT_NAME

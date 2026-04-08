@@ -1,8 +1,16 @@
+/**
+ * @file Status.hpp
+ * @brief Defines the status codes shared by the public CANnect API.
+ */
+
 #pragma once
 
 namespace cannect
 {
 
+/**
+ * @brief X-macro table used to generate the Status enum and helper functions.
+ */
 #define STATUS_CODE_LIST                                                                                               \
     X(SUCCESS, 0, "Success")                                                                                           \
     X(UNSUCCESS, 1, "Unsuccess")                                                                                       \
@@ -10,6 +18,9 @@ namespace cannect
     X(INTERFACE_ALREADY_OPEN, 3, "Interface already open")                                                             \
     X(INTERFACE_INVALID_NAME, 4, "Interface name is invalid")
 
+/**
+ * @brief Result codes returned by CANnect operations.
+ */
 enum class Status
 {
 #define X(name, value, desc) name = value,
@@ -17,6 +28,12 @@ enum class Status
 #undef X
 };
 
+/**
+ * @brief Returns the symbolic name of a status code.
+ *
+ * @param code Status code to translate.
+ * @return Null-terminated symbolic name such as `SUCCESS`.
+ */
 inline const char *statusToString(Status code)
 {
     switch (code)
@@ -31,6 +48,12 @@ inline const char *statusToString(Status code)
     }
 }
 
+/**
+ * @brief Returns a human-readable description of a status code.
+ *
+ * @param code Status code to translate.
+ * @return Null-terminated description string.
+ */
 inline const char *statusDescription(Status code)
 {
     switch (code)

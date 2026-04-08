@@ -7,7 +7,6 @@
 #include <cstring>
 
 using namespace cannect;
-using C = CanTsCodec;
 
 SetBlockManager::SetBlockManager(uint8_t localAddress, FrameSender sender)
     : localAddress(localAddress), frameSender(std::move(sender))
@@ -22,12 +21,12 @@ void SetBlockManager::setHandler(Handler h)
 
 void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
 {
-    const SetBlockFrameType type = C::getSetBlockType(h.command);
+    const SetBlockFrameType type = CanTsCodec::getSetBlockType(h.command);
 
     switch (type)
     {
     case SetBlockFrameType::REQUEST: {
-        const uint8_t numBlocks = static_cast<uint8_t>(C::getSetBlockLow6(h.command) + 1u);
+        const uint8_t numBlocks = static_cast<uint8_t>(CanTsCodec::getSetBlockLow6(h.command) + 1u);
 
         bool accepted = false;
         {
@@ -54,8 +53,8 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
         resp.to = h.from;
         resp.from = localAddress;
         resp.type = CanTsMessageType::SETBLOCK;
-        resp.command = C::makeSetBlockCommand(accepted ? SetBlockFrameType::ACK : SetBlockFrameType::NACK,
-                                              C::ackCommandLow7(h.command));
+        resp.command = CanTsCodec::makeSetBlockCommand(accepted ? SetBlockFrameType::ACK : SetBlockFrameType::NACK,
+                                                       CanTsCodec::ackCommandLow7(h.command));
 
         (void)frameSender(resp, frame.data, frame.dlc);
         break;
@@ -63,7 +62,7 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
 
     case SetBlockFrameType::TRANSFER: {
         bool accept = false;
-        uint8_t seq = C::getSetBlockLow6(h.command);
+        uint8_t seq = CanTsCodec::getSetBlockLow6(h.command);
 
         {
             std::lock_guard<std::mutex> lock(mtx);
@@ -80,8 +79,8 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
         resp.to = h.from;
         resp.from = localAddress;
         resp.type = CanTsMessageType::SETBLOCK;
-        resp.command = C::makeSetBlockCommand(accept ? SetBlockFrameType::ACK : SetBlockFrameType::NACK,
-                                              C::ackCommandLow7(h.command));
+        resp.command = CanTsCodec::makeSetBlockCommand(accept ? SetBlockFrameType::ACK : SetBlockFrameType::NACK,
+                                                       CanTsCodec::ackCommandLow7(h.command));
 
         (void)frameSender(resp, frame.data, frame.dlc);
         break;
@@ -113,9 +112,9 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
                         received[i] = !it->second.blocks[i].empty();
                     }
 
-                    bitmap = C::makeBitmap(received);
+                    bitmap = CanTsCodec::makeBitmap(received);
 
-                    if (C::allBlocksReceived(received) && !it->second.done)
+                    if (CanTsCodec::allBlocksReceived(received) && !it->second.done)
                     {
                         assembled.reserve(static_cast<size_t>(it->second.numBlocks) * CAN_FRAME_MAX_DATA);
                         for (uint8_t i = 0; i < it->second.numBlocks; ++i)
@@ -133,7 +132,8 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
             nack.to = h.from;
             nack.from = localAddress;
             nack.type = CanTsMessageType::SETBLOCK;
-            nack.command = C::makeSetBlockCommand(SetBlockFrameType::NACK, C::ackCommandLow7(h.command));
+            nack.command =
+                CanTsCodec::makeSetBlockCommand(SetBlockFrameType::NACK, CanTsCodec::ackCommandLow7(h.command));
             (void)frameSender(nack, frame.data, frame.dlc);
             return;
         }
@@ -169,7 +169,7 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
                 {
                     received[i] = !it->second.blocks[i].empty();
                 }
-                bitmap = C::makeBitmap(received);
+                bitmap = CanTsCodec::makeBitmap(received);
                 handlerDone = it->second.done;
             }
         }
@@ -178,8 +178,8 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
         report.to = h.from;
         report.from = localAddress;
         report.type = CanTsMessageType::SETBLOCK;
-        report.command =
-            C::makeSetBlockReportCommand(static_cast<uint8_t>(bitmap.size() & C::BLOCK_LOW6_MASK), handlerDone);
+        report.command = CanTsCodec::makeSetBlockReportCommand(
+            static_cast<uint8_t>(bitmap.size() & CanTsCodec::BLOCK_LOW6_MASK), handlerDone);
 
         const uint8_t dlc = static_cast<uint8_t>(std::min<size_t>(bitmap.size(), CAN_FRAME_MAX_DATA));
         (void)frameSender(report, bitmap.data(), dlc);
@@ -196,7 +196,7 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
         ack.to = h.from;
         ack.from = localAddress;
         ack.type = CanTsMessageType::SETBLOCK;
-        ack.command = C::makeSetBlockCommand(SetBlockFrameType::ACK, C::ackCommandLow7(h.command));
+        ack.command = CanTsCodec::makeSetBlockCommand(SetBlockFrameType::ACK, CanTsCodec::ackCommandLow7(h.command));
 
         (void)frameSender(ack, frame.data, frame.dlc);
         break;
@@ -232,7 +232,7 @@ void SetBlockManager::onFrame(const CanTsHeader &h, const CanFrame &frame)
         if (pending.active && pending.peer == h.from && pending.waitingReport)
         {
             pending.bitmap.assign(frame.data, frame.data + frame.dlc);
-            pending.done = C::getSetBlockDone(h.command);
+            pending.done = CanTsCodec::getSetBlockDone(h.command);
             pending.ok = true;
             pending.reportReceived = true;
             cv.notify_all();
@@ -282,7 +282,7 @@ bool SetBlockManager::setBlock(uint8_t to, const std::vector<uint8_t> &addressLE
     req.to = to;
     req.from = localAddress;
     req.type = CanTsMessageType::SETBLOCK;
-    req.command = C::makeSetBlockCommand(SetBlockFrameType::REQUEST, static_cast<uint8_t>(numBlocks - 1u));
+    req.command = CanTsCodec::makeSetBlockCommand(SetBlockFrameType::REQUEST, static_cast<uint8_t>(numBlocks - 1u));
 
     if (!frameSender(req, addressLE.data(),
                      static_cast<uint8_t>(std::min<size_t>(addressLE.size(), CAN_FRAME_MAX_DATA))))
@@ -310,7 +310,7 @@ bool SetBlockManager::setBlock(uint8_t to, const std::vector<uint8_t> &addressLE
         tr.to = to;
         tr.from = localAddress;
         tr.type = CanTsMessageType::SETBLOCK;
-        tr.command = C::makeSetBlockCommand(SetBlockFrameType::TRANSFER, i);
+        tr.command = CanTsCodec::makeSetBlockCommand(SetBlockFrameType::TRANSFER, i);
 
         if (!frameSender(tr, blocks[i].data(), CAN_FRAME_MAX_DATA))
         {
@@ -332,7 +332,7 @@ bool SetBlockManager::setBlock(uint8_t to, const std::vector<uint8_t> &addressLE
     statusReq.to = to;
     statusReq.from = localAddress;
     statusReq.type = CanTsMessageType::SETBLOCK;
-    statusReq.command = C::makeSetBlockCommand(SetBlockFrameType::STATUS_REQUEST, 0);
+    statusReq.command = CanTsCodec::makeSetBlockCommand(SetBlockFrameType::STATUS_REQUEST, 0);
 
     if (!frameSender(statusReq, nullptr, 0))
     {
@@ -356,7 +356,7 @@ bool SetBlockManager::setBlock(uint8_t to, const std::vector<uint8_t> &addressLE
         bool allSet = true;
         for (uint8_t i = 0; i < numBlocks; ++i)
         {
-            if (!C::bitmapBitIsSet(pending.bitmap, i))
+            if (!CanTsCodec::bitmapBitIsSet(pending.bitmap, i))
             {
                 allSet = false;
                 break;
@@ -371,7 +371,7 @@ bool SetBlockManager::setBlock(uint8_t to, const std::vector<uint8_t> &addressLE
     abort.to = to;
     abort.from = localAddress;
     abort.type = CanTsMessageType::SETBLOCK;
-    abort.command = C::makeSetBlockCommand(SetBlockFrameType::ABORT, 0);
+    abort.command = CanTsCodec::makeSetBlockCommand(SetBlockFrameType::ABORT, 0);
     (void)frameSender(abort, nullptr, 0);
 
     return success;

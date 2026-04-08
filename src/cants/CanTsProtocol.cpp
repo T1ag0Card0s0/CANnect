@@ -7,7 +7,6 @@
 #include <cstring>
 
 using namespace cannect;
-using C = CanTsCodec;
 
 CanTsProtocol::CanTsProtocol(uint8_t localAddress)
     : localAddress(localAddress),
@@ -67,7 +66,7 @@ bool CanTsProtocol::sendFrame(const CanTsHeader &h, const uint8_t *data, uint8_t
     }
 
     CanFrame frame{};
-    frame.id = C::encode(h);
+    frame.id = CanTsCodec::encode(h);
     frame.dlc = dlc;
 
     if (data && dlc > 0)
@@ -82,7 +81,7 @@ void CanTsProtocol::notePeerAlive(uint8_t peer) { peers[peer].lastSeen = std::ch
 
 Status CanTsProtocol::onFrame(const CanFrame &frame)
 {
-    const CanTsHeader header = C::decode(frame.id);
+    const CanTsHeader header = CanTsCodec::decode(frame.id);
 
     {
         std::lock_guard<std::mutex> lock(mtx);
@@ -124,8 +123,8 @@ Status CanTsProtocol::onFrame(const CanFrame &frame)
 
 void CanTsProtocol::handleTelecommand(const CanTsHeader &h, const CanFrame &frame)
 {
-    const auto kind = C::getTcTmKind(h.command);
-    const uint8_t channel = C::getChannel(h.command);
+    const auto kind = CanTsCodec::getTcTmKind(h.command);
+    const uint8_t channel = CanTsCodec::getChannel(h.command);
 
     if (kind == CanTsReqAck::REQ)
     {
@@ -148,7 +147,7 @@ void CanTsProtocol::handleTelecommand(const CanTsHeader &h, const CanFrame &fram
         resp.to = h.from;
         resp.from = localAddress;
         resp.type = CanTsMessageType::TELECOMMAND;
-        resp.command = C::makeTcTmCommand(ok ? CanTsReqAck::ACK : CanTsReqAck::NACK, channel);
+        resp.command = CanTsCodec::makeTcTmCommand(ok ? CanTsReqAck::ACK : CanTsReqAck::NACK, channel);
 
         (void)sendFrame(resp, frame.data, frame.dlc);
         return;
@@ -170,8 +169,8 @@ void CanTsProtocol::handleTelecommand(const CanTsHeader &h, const CanFrame &fram
 
 void CanTsProtocol::handleTelemetry(const CanTsHeader &h, const CanFrame &frame)
 {
-    const auto kind = C::getTcTmKind(h.command);
-    const uint8_t channel = C::getChannel(h.command);
+    const auto kind = CanTsCodec::getTcTmKind(h.command);
+    const uint8_t channel = CanTsCodec::getChannel(h.command);
 
     if (kind == CanTsReqAck::REQ)
     {
@@ -193,7 +192,7 @@ void CanTsProtocol::handleTelemetry(const CanTsHeader &h, const CanFrame &frame)
         resp.to = h.from;
         resp.from = localAddress;
         resp.type = CanTsMessageType::TELEMETRY;
-        resp.command = C::makeTcTmCommand(ok ? CanTsReqAck::ACK : CanTsReqAck::NACK, channel);
+        resp.command = CanTsCodec::makeTcTmCommand(ok ? CanTsReqAck::ACK : CanTsReqAck::NACK, channel);
 
         (void)sendFrame(resp, ok ? respData : nullptr, ok ? CAN_FRAME_MAX_DATA : 0);
         return;
@@ -230,7 +229,7 @@ void CanTsProtocol::handleUnsolicited(const CanTsHeader &h, const CanFrame &fram
 
     uint8_t buf[CAN_FRAME_MAX_DATA] = {};
     std::memcpy(buf, frame.data, frame.dlc);
-    handlerCopy(h.from, C::getChannel(h.command), buf);
+    handlerCopy(h.from, CanTsCodec::getChannel(h.command), buf);
 }
 
 void CanTsProtocol::handleTimeSync(const CanTsHeader &h, const CanFrame &frame)
@@ -266,7 +265,8 @@ bool CanTsProtocol::sendTelecommand(uint8_t to, uint8_t channel, const uint8_t d
         pendingTc.channel = channel;
     }
 
-    const CanTsHeader h{to, localAddress, CanTsMessageType::TELECOMMAND, C::makeTcTmCommand(CanTsReqAck::REQ, channel)};
+    const CanTsHeader h{to, localAddress, CanTsMessageType::TELECOMMAND,
+                        CanTsCodec::makeTcTmCommand(CanTsReqAck::REQ, channel)};
 
     if (!sendFrame(h, data, CAN_FRAME_MAX_DATA))
     {
@@ -299,7 +299,8 @@ bool CanTsProtocol::requestTelemetry(uint8_t to, uint8_t channel)
         pendingTm.channel = channel;
     }
 
-    const CanTsHeader h{to, localAddress, CanTsMessageType::TELEMETRY, C::makeTcTmCommand(CanTsReqAck::REQ, channel)};
+    const CanTsHeader h{to, localAddress, CanTsMessageType::TELEMETRY,
+                        CanTsCodec::makeTcTmCommand(CanTsReqAck::REQ, channel)};
 
     if (!sendFrame(h, nullptr, 0))
     {
